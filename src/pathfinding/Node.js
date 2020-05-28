@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import "./Node.css";
+import React from 'react';
+import styled from 'styled-components';
+import './Node.css';
 
 const StyledNode = styled.div`
   height: 100%;
@@ -26,20 +26,25 @@ const FinishNode = styled.div`
   background: red;
 `;
 
-export default function Node({ nodeData }) {
+export default function Node({ nodeData, onClick }) {
   const extraClassName = nodeData.isFinish
-    ? "node-finish"
+    ? 'node-finish'
     : nodeData.isStart
-    ? "node-start"
+    ? 'node-start'
     : nodeData.isWall
-    ? "node-wall"
-    : "";
+    ? 'node-wall'
+    : '';
+
+  const clickedNode = () => {
+    onClick(nodeData.col, nodeData.row);
+  };
 
   if (nodeData.isStart) {
     return (
       <StartNode
         className={`node ${extraClassName}`}
         id={`node-${nodeData.row}-${nodeData.col}`}
+        onClick={clickedNode}
       ></StartNode>
     );
   } else if (nodeData.isFinish) {
@@ -47,6 +52,7 @@ export default function Node({ nodeData }) {
       <FinishNode
         className={`node ${extraClassName}`}
         id={`node-${nodeData.row}-${nodeData.col}`}
+        onClick={clickedNode}
       ></FinishNode>
     );
   } else {
@@ -54,6 +60,16 @@ export default function Node({ nodeData }) {
       <StyledNode
         className={`node ${extraClassName}`}
         id={`node-${nodeData.row}-${nodeData.col}`}
+        // onClick={clickedNode}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          clickedNode();
+        }}
+        onMouseEnter={(e) => {
+          if (e.buttons === 1) {
+            clickedNode();
+          }
+        }}
       ></StyledNode>
     );
   }
