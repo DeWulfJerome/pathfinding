@@ -1,11 +1,3 @@
-.node-finish {
-  background-color: red;
-}
-
-.node-start {
-  background-color: green;
-}
-
 .node-visited {
   animation-name: visitedAnimation;
   animation-duration: 1.5s;
@@ -39,10 +31,6 @@
   }
 }
 
-.node-wall {
-  background-color: rgb(12, 53, 71) !important;
-}
-
 .node-shortest-path {
   animation-name: shortestPath;
   animation-duration: 1.5s;
@@ -69,8 +57,4 @@
     transform: scale(1);
     background-color: rgb(255, 254, 106);
   }
-}
-
-.node:hover {
-  cursor: pointer;
 }
