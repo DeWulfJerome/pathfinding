@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Node from './Node';
-import { dijkstra, getNodesInShortestPathOrder } from '../algorithms/dijkstra';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Node from "./Node";
+import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 
 const colCount = 50;
 const rowCount = 15;
@@ -24,7 +24,7 @@ const Row = styled.div`
 
 export default function PathfindingVisualizer() {
   const [grid, setGrid] = useState([]);
-  const [clickMode, setClickMode] = useState('start');
+  const [clickMode, setClickMode] = useState("start");
 
   useEffect(() => {
     getInitialGrid();
@@ -62,7 +62,7 @@ export default function PathfindingVisualizer() {
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
-          'node node-visited';
+          "node node-visited";
       }, 5 * i);
     }
   };
@@ -72,7 +72,7 @@ export default function PathfindingVisualizer() {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.row}-${node.col}`).className =
-          'node node-shortest-path';
+          "node node-shortest-path";
       }, 30 * i);
     }
   };
@@ -98,20 +98,20 @@ export default function PathfindingVisualizer() {
       distance: Infinity,
       isVisited: false,
       isWall: false,
-      previousNode: null
+      previousNode: null,
     };
   };
 
   const alterGrid = (col, row) => {
     switch (clickMode) {
-      case 'wall':
+      case "wall":
         setWall(col, row);
         break;
-      case 'start':
-        setEndpoints(col, row, 'isStart');
+      case "start":
+        setEndpoints(col, row, "isStart");
         break;
-      case 'finish':
-        setEndpoints(col, row, 'isFinish');
+      case "finish":
+        setEndpoints(col, row, "isFinish");
         break;
     }
   };
@@ -143,7 +143,7 @@ export default function PathfindingVisualizer() {
         }
         if (newGrid[i][j].col === col && i === row) {
           newGrid[i][j][endpoint] = true;
-          if (endpoint === 'isStart') {
+          if (endpoint === "isStart") {
             START_NODE_ROW = row;
             START_NODE_COL = col;
           } else {
@@ -158,9 +158,9 @@ export default function PathfindingVisualizer() {
 
   return (
     <div>
-      <button onClick={() => setClickMode('start')}>Set Start</button>
-      <button onClick={() => setClickMode('finish')}>Set Finish</button>
-      <button onClick={() => setClickMode('wall')}>Set Wall</button>
+      <button onClick={() => setClickMode("start")}>Set Start</button>
+      <button onClick={() => setClickMode("finish")}>Set Finish</button>
+      <button onClick={() => setClickMode("wall")}>Set Wall</button>
       <Grid>{renderNodes()}</Grid>
       <button onClick={visualizeDijkstra}>
         Visualize Dijkstra's Algorithm
