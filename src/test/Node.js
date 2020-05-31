@@ -19,29 +19,29 @@ const StyledNode = styled.div`
     width: 20px;
     height: 20px;
     right: -10px;
-    border-top: 3px solid red;
-    border-left: 3px solid red;
+    border-top: 3px solid #c7c7c7;
+    border-left: 3px solid #c7c7c7;
     top: 50%;
     z-index: -1;
     background-color: transparent;
-    border-top: ${(props) => (props.lastCol ? "none" : "3px solid red")};
-    border-left: ${(props) => (props.lastRow ? "none" : "3px solid red")};
+    border-top: ${(props) => (props.lastCol ? "none" : "3px solid #c7c7c7")};
+    border-left: ${(props) => (props.lastRow ? "none" : "3px solid #c7c7c7")};
   }
-`;
 
-/**
- * :after {
+  :after {
     position: absolute;
     content: "";
-    content: ${({ lastRow }) => (lastRow ? "normal" : "")};
+    content: ${(props) => (props.lastRow || props.lastCol ? "normal" : "")};
     display: block;
-    height: 10px;
-    width: 3px;
+    height: 3px;
+    width: 28.3px;
+    transform: rotate(45deg);
     bottom: -10px;
-    left: calc(50% - 2px);
-    background-color: red;
+    right: -20px;
+
+    background-color: #c7c7c7;
   }
- */
+`;
 
 const StartNode = styled(StyledNode)`
   background: green;
