@@ -16,16 +16,21 @@ const StyledNode = styled.div`
     position: absolute;
     content: "";
     display: block;
-    width: 10px;
-    height: 3px;
+    width: 20px;
+    height: 20px;
     right: -10px;
+    border-top: 3px solid red;
+    border-left: 3px solid red;
     top: 50%;
-    transform: translateY(-50%);
-    background-color: red;
-    content: ${(props) => (props.lastCol ? "normal" : "")};
+    z-index: -1;
+    background-color: transparent;
+    border-top: ${(props) => (props.lastCol ? "none" : "3px solid red")};
+    border-left: ${(props) => (props.lastRow ? "none" : "3px solid red")};
   }
+`;
 
-  :after {
+/**
+ * :after {
     position: absolute;
     content: "";
     content: ${({ lastRow }) => (lastRow ? "normal" : "")};
@@ -36,7 +41,7 @@ const StyledNode = styled.div`
     left: calc(50% - 2px);
     background-color: red;
   }
-`;
+ */
 
 const StartNode = styled(StyledNode)`
   background: green;

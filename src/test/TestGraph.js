@@ -3,8 +3,8 @@ import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
 
-const GRAPH_ROWS = 4;
-const GRAPH_COLS = 4;
+const GRAPH_ROWS = 7;
+const GRAPH_COLS = 8;
 
 const Grid = styled.div`
   margin: 0 auto;
