@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { createGraph } from "../dataStructures/graph";
-import styled from "styled-components";
-import Node from "./Node";
-import Dijkstra from "../algorithms/newDijkstra";
+import React, { useEffect, useState } from 'react';
+import { createGraph } from '../dataStructures/graph';
+import styled from 'styled-components';
+import Node from './Node';
+import Dijkstra from '../algorithms/newDijkstra';
 
 const GRAPH_ROWS = 7;
 const GRAPH_COLS = 8;
@@ -29,8 +29,8 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
-    const dijkstra = new Dijkstra(graphData, "1-1", "1-3");
-    dijkstra.findShortestPath();
+    const dijkstra = new Dijkstra(graphData, '1-1', '1-3');
+    console.log(dijkstra.findShortestPath());
   };
 
   const buildGrid = () => {
@@ -63,7 +63,7 @@ export default function TestGraph() {
       isWall: false,
       previousNode: null,
       lastCol: false,
-      lastRow: false,
+      lastRow: false
     };
   };
 

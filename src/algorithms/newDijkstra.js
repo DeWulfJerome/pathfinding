@@ -9,21 +9,38 @@ export default class Dijkstra {
     const unvisitedNodes = new Map(this.graph);
     // Set the starting node distance to 0.
     unvisitedNodes.get(this.startNode).distance = 0;
-    const visitedNodesInOrder = new Map();
-    const visitedNodes = new Map();
+    const previousNodes = new Map();
+    const distanceToNodes = new Map();
+    let edgeDistance = 0;
+
     while (unvisitedNodes.size) {
+      edgeDistance++;
       // Visit the node with the smallest known distance from the start node
       const closestNode = this.getClosestNode(unvisitedNodes);
       // For this node, check its unvisited neighbours
       closestNode[1].neighbours.forEach((neighbour) => {
-        console.log(unvisitedNodes.get(neighbour));
+        // For this node, calculate distance of each neighbour from the start node
+        if (unvisitedNodes.has(neighbour)) {
+          const tempNode = unvisitedNodes.get(neighbour);
+          tempNode.distance = edgeDistance;
+          if (distanceToNodes.has(neighbour)) {
+            if (distanceToNodes.get(neighbour).distance > tempNode.distance) {
+              // If the calc distance is less than the known distance, update the shortest path
+              distanceToNodes.set(neighbour, tempNode);
+              // Update the previous node for each of the updated distances
+              previousNodes.set(neighbour, closestNode[0]);
+            }
+          } else {
+            distanceToNodes.set(neighbour, tempNode);
+            // Update the previous node for each of the updated distances
+            previousNodes.set(neighbour, closestNode[0]);
+          }
+        }
       });
-      // For this node, calculate distance of each neighbour from the start node
-      // If the calc distance is less than the known distance, update the shortest path
-      // Update the previous node for each of the updated distances
       // Add the current node to the list of visited nodes / remove from unvisited nodes
-      break;
+      unvisitedNodes.delete(closestNode[0]);
     }
+    return { distances: distanceToNodes, previousNodes };
   }
 
   getClosestNode(unvisitedNodes) {
