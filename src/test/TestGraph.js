@@ -29,8 +29,12 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
-    const dijkstra = new Dijkstra(graphData, '1-1', '1-3');
-    console.log(dijkstra.findShortestPath());
+    const dijkstra = new Dijkstra(graphData, '1-1', '7-3');
+    const {
+      pathDistances,
+      previousNodes
+    } = dijkstra.getDistancesAndPreviousNodes();
+    console.log(dijkstra.findShortestPath(previousNodes));
   };
 
   const buildGrid = () => {

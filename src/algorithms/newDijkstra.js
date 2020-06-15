@@ -5,7 +5,7 @@ export default class Dijkstra {
     this.finishNode = finishNode;
   }
 
-  findShortestPath() {
+  getDistancesAndPreviousNodes() {
     const unvisitedNodes = new Map(this.graph);
     // Set the starting node distance to 0.
     unvisitedNodes.get(this.startNode).distance = 0;
@@ -47,5 +47,18 @@ export default class Dijkstra {
     return [...unvisitedNodes.entries()]
       .sort((a, b) => a[1].distance - b[1].distance)
       .shift();
+  }
+
+  findShortestPath(previousNodes) {
+    const nodesInReverseOrder = [this.finishNode];
+    let lookupNode = this.finishNode;
+    while (true) {
+      nodesInReverseOrder.push(previousNodes.get(lookupNode));
+      lookupNode = previousNodes.get(lookupNode);
+      if (lookupNode === this.startNode) {
+        break;
+      }
+    }
+    return nodesInReverseOrder.reverse();
   }
 }
