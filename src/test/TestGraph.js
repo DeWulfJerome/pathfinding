@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
+import Dijkstra from "../algorithms/newDijkstra";
 
 const GRAPH_ROWS = 7;
 const GRAPH_COLS = 8;
@@ -26,6 +27,11 @@ export default function TestGraph() {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
     buildGrid();
   }, []);
+
+  const testDijkstra = () => {
+    const dijkstra = new Dijkstra(graphData, "1-1", "1-3");
+    dijkstra.findShortestPath();
+  };
 
   const buildGrid = () => {
     const nodeHolder = [];
@@ -73,5 +79,10 @@ export default function TestGraph() {
     });
   };
 
-  return <Grid>{renderNodes()}</Grid>;
+  return (
+    <div>
+      <Grid>{renderNodes()}</Grid>
+      <button onClick={testDijkstra}>log graph</button>
+    </div>
+  );
 }

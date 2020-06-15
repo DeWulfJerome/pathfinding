@@ -58,9 +58,8 @@ export const getNodeEdges = (row, col, graph) => {
 };
 
 const addLinkedCenterNodes = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
       `${i - 1}-${j - 1}`,
       `${i - 1}-${j}`,
       `${i - 1}-${j + 1}`,
@@ -69,86 +68,103 @@ const addLinkedCenterNodes = (i, j, graph) => {
       `${i + 1}-${j - 1}`,
       `${i + 1}-${j}`,
       `${i + 1}-${j + 1}`,
-    ])
-  );
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedFirstColNodes = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
       `${i - 1}-${j}`,
       `${i - 1}-${j + 1}`,
       `${i}-${j + 1}`,
       `${i + 1}-${j}`,
       `${i + 1}-${j + 1}`,
-    ])
-  );
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedLastColNodes = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
       `${i - 1}-${j - 1}`,
       `${i - 1}-${j}`,
       `${i}-${j - 1}`,
       `${i + 1}-${j - 1}`,
       `${i + 1}-${j}`,
-    ])
-  );
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedFirstRowNodes = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
       `${i}-${j - 1}`,
       `${i}-${j + 1}`,
       `${i + 1}-${j - 1}`,
       `${i + 1}-${j}`,
       `${i + 1}-${j + 1}`,
-    ])
-  );
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedFirstRowFirstColNode = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([`${i}-${j + 1}`, `${i + 1}-${j}`, `${i + 1}-${j + 1}`])
-  );
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
+      `${i}-${j + 1}`,
+      `${i + 1}-${j}`,
+      `${i + 1}-${j + 1}`,
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedFirstRowLastColNode = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([`${i}-${j - 1}`, `${i + 1}-${j - 1}`, `${i + 1}-${j}`])
-  );
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
+      `${i}-${j - 1}`,
+      `${i + 1}-${j - 1}`,
+      `${i + 1}-${j}`,
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedLastRowNodes = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
       `${i - 1}-${j - 1}`,
       `${i - 1}-${j}`,
       `${i - 1}-${j + 1}`,
       `${i}-${j - 1}`,
       `${i}-${j + 1}`,
-    ])
-  );
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedLastRowFirstColNode = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([`${i - 1}-${j}`, `${i - 1}-${j + 1}`, `${i}-${j + 1}`])
-  );
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
+      `${i - 1}-${j}`,
+      `${i - 1}-${j + 1}`,
+      `${i}-${j + 1}`,
+    ]),
+    distance: Infinity,
+  });
 };
 
 const addLinkedLastRowLastColNode = (i, j, graph) => {
-  graph.set(
-    `${i}-${j}`,
-    new Set([`${i - 1}-${j - 1}`, `${i - 1}-${j}`, `${i}-${j - 1}`])
-  );
+  graph.set(`${i}-${j}`, {
+    neighbours: new Set([
+      `${i - 1}-${j - 1}`,
+      `${i - 1}-${j}`,
+      `${i}-${j - 1}`,
+    ]),
+    distance: Infinity,
+  });
 };
