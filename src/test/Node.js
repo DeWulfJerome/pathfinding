@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const StyledNode = styled.div`
   height: calc(100% - 10px);
@@ -14,7 +14,7 @@ const StyledNode = styled.div`
 
   :before {
     position: absolute;
-    content: "";
+    content: '';
     display: block;
     width: 20px;
     height: 20px;
@@ -24,14 +24,14 @@ const StyledNode = styled.div`
     top: 50%;
     z-index: -1;
     background-color: transparent;
-    border-top: ${(props) => (props.lastCol ? "none" : "3px solid #c7c7c7")};
-    border-left: ${(props) => (props.lastRow ? "none" : "3px solid #c7c7c7")};
+    border-top: ${(props) => (props.lastCol ? 'none' : '3px solid #c7c7c7')};
+    border-left: ${(props) => (props.lastRow ? 'none' : '3px solid #c7c7c7')};
   }
 
   :after {
     position: absolute;
-    content: "";
-    content: ${(props) => (props.lastRow || props.lastCol ? "normal" : "")};
+    content: '';
+    content: ${(props) => (props.lastRow || props.lastCol ? 'normal' : '')};
     display: block;
     height: 3px;
     width: 28.3px;
@@ -55,9 +55,23 @@ const WallNode = styled(StyledNode)`
   background: rgb(12, 53, 71);
 `;
 
-export default function Node({ nodeData }) {
+const PathNode = styled(StyledNode)`
+  background: orange;
+`;
+
+export default function Node({ nodeData, parentRef }) {
+  if (nodeData.isVisited) {
+    return (
+      <PathNode
+        ref={parentRef}
+        lastCol={nodeData.lastCol}
+        lastRow={nodeData.lastRow}
+      ></PathNode>
+    );
+  }
   return (
     <StyledNode
+      ref={parentRef}
       lastCol={nodeData.lastCol}
       lastRow={nodeData.lastRow}
     ></StyledNode>

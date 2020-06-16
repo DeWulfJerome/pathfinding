@@ -49,9 +49,10 @@ export default class Dijkstra {
       .shift();
   }
 
-  findShortestPath(previousNodes) {
+  findShortestPath() {
     const nodesInReverseOrder = [this.finishNode];
     let lookupNode = this.finishNode;
+    const { distances, previousNodes } = this.getDistancesAndPreviousNodes();
     while (true) {
       nodesInReverseOrder.push(previousNodes.get(lookupNode));
       lookupNode = previousNodes.get(lookupNode);
