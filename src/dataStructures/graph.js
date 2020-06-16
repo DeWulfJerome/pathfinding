@@ -1,3 +1,11 @@
+const horvertEdgeDistance = 1;
+const diagonalEdgeDistance = parseFloat(
+  Math.sqrt(
+    horvertEdgeDistance * horvertEdgeDistance +
+      horvertEdgeDistance * horvertEdgeDistance
+  ).toFixed(5)
+);
+
 export const createGraph = (rows, cols) => {
   const graph = new Map();
   for (let i = 1; i <= rows; i++) {
@@ -60,111 +68,111 @@ export const getNodeEdges = (row, col, graph) => {
 const addLinkedCenterNodes = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j - 1}`,
-      `${i - 1}-${j}`,
-      `${i - 1}-${j + 1}`,
-      `${i}-${j - 1}`,
-      `${i}-${j + 1}`,
-      `${i + 1}-${j - 1}`,
-      `${i + 1}-${j}`,
-      `${i + 1}-${j + 1}`,
+      { name: `${i - 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedFirstColNodes = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j}`,
-      `${i - 1}-${j + 1}`,
-      `${i}-${j + 1}`,
-      `${i + 1}-${j}`,
-      `${i + 1}-${j + 1}`,
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedLastColNodes = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j - 1}`,
-      `${i - 1}-${j}`,
-      `${i}-${j - 1}`,
-      `${i + 1}-${j - 1}`,
-      `${i + 1}-${j}`,
+      { name: `${i - 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedFirstRowNodes = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i}-${j - 1}`,
-      `${i}-${j + 1}`,
-      `${i + 1}-${j - 1}`,
-      `${i + 1}-${j}`,
-      `${i + 1}-${j + 1}`,
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedFirstRowFirstColNode = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i}-${j + 1}`,
-      `${i + 1}-${j}`,
-      `${i + 1}-${j + 1}`,
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedFirstRowLastColNode = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i}-${j - 1}`,
-      `${i + 1}-${j - 1}`,
-      `${i + 1}-${j}`,
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedLastRowNodes = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j - 1}`,
-      `${i - 1}-${j}`,
-      `${i - 1}-${j + 1}`,
-      `${i}-${j - 1}`,
-      `${i}-${j + 1}`,
+      { name: `${i - 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedLastRowFirstColNode = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j}`,
-      `${i - 1}-${j + 1}`,
-      `${i}-${j + 1}`,
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };
 
 const addLinkedLastRowLastColNode = (i, j, graph) => {
   graph.set(`${i}-${j}`, {
     neighbours: new Set([
-      `${i - 1}-${j - 1}`,
-      `${i - 1}-${j}`,
-      `${i}-${j - 1}`,
+      { name: `${i - 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity,
+    distance: Infinity
   });
 };

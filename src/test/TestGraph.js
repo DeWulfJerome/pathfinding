@@ -30,7 +30,7 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
-    const dijkstra = new Dijkstra(graphData, '1-1', '7-3');
+    const dijkstra = new Dijkstra(graphData, '1-1', '7-5');
     const shortestPath = dijkstra.findShortestPath();
     shortestPath.forEach((node) => {
       nodeRefs.current.get(node).style.background = 'orange';
