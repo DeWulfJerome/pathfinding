@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 export default class Dijkstra {
   constructor(graph, startNode, finishNode) {
     this.graph = graph;
@@ -6,7 +8,7 @@ export default class Dijkstra {
   }
 
   getDistancesAndPreviousNodes() {
-    const unvisitedNodes = new Map(this.graph);
+    const unvisitedNodes = _.cloneDeep(this.graph);
     // Set the starting node distance to 0.
     unvisitedNodes.get(this.startNode).distance = 0;
     const previousNodes = new Map();

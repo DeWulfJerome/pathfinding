@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { createGraph } from '../dataStructures/graph';
-import styled from 'styled-components';
-import Node from './Node';
-import Dijkstra from '../algorithms/newDijkstra';
+import React, { useEffect, useState, useRef } from "react";
+import { createGraph } from "../dataStructures/graph";
+import styled from "styled-components";
+import Node from "./Node";
+import Dijkstra from "../algorithms/newDijkstra";
 
 const GRAPH_ROWS = 7;
 const GRAPH_COLS = 8;
@@ -21,7 +21,10 @@ const Row = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
+  const [startNode, setStartNode] = useState("1-1");
+  const [endNode, setEndNode] = useState("7-8");
   const [grid, setGrid] = useState([]);
+  const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
@@ -30,11 +33,15 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
-    const dijkstra = new Dijkstra(graphData, '1-1', '7-5');
+    prevShortesPath.forEach((node) => {
+      nodeRefs.current.get(node).style.background = "grey";
+    });
+    const dijkstra = new Dijkstra(graphData, startNode, endNode);
     const shortestPath = dijkstra.findShortestPath();
     shortestPath.forEach((node) => {
-      nodeRefs.current.get(node).style.background = 'orange';
+      nodeRefs.current.get(node).style.background = "orange";
     });
+    setPrevShortestPath(shortestPath);
   };
 
   const buildGrid = () => {
@@ -67,7 +74,7 @@ export default function TestGraph() {
       isWall: false,
       previousNode: null,
       lastCol: false,
-      lastRow: false
+      lastRow: false,
     };
   };
 
@@ -79,6 +86,9 @@ export default function TestGraph() {
             <Node
               key={i}
               nodeData={node}
+              onNodeClick={(row, col) => {
+                setStartNode(`${row}-${col}`);
+              }}
               parentRef={(el) =>
                 nodeRefs.current.set(`${node.row}-${node.col}`, el)
               }
