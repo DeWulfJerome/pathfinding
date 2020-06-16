@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import Lottie from "react-lottie";
+import plant1 from "../assets/plant1.json";
+import plant2 from "../assets/plant2.json";
+import plant3 from "../assets/plant3.json";
 
 const StyledNode = styled.div`
   height: calc(100% - 10px);
@@ -43,40 +47,50 @@ const StyledNode = styled.div`
   }
 `;
 
-const StartNode = styled(StyledNode)`
-  background: green;
-`;
-
-const FinishNode = styled(StyledNode)`
-  background: red;
-`;
-
-const WallNode = styled(StyledNode)`
-  background: rgb(12, 53, 71);
-`;
-
-const PathNode = styled(StyledNode)`
-  background: orange;
-`;
-
 export default function Node({ nodeData, parentRef, onNodeClick }) {
-  if (nodeData.isVisited) {
-    return (
-      <PathNode
-        ref={parentRef}
-        lastCol={nodeData.lastCol}
-        lastRow={nodeData.lastRow}
-      ></PathNode>
-    );
-  }
+  const [animData, setAnimData] = useState(plant1);
+
+  const plant1Options = {
+    loop: false,
+    autoplay: false,
+    animationData: animData,
+    rendererSettings: {
+      preserveAspectRation: "xMidYMid slice",
+    },
+  };
+
+  useEffect(() => {
+    console.log("mount?");
+  }, []);
+
   return (
-    <StyledNode
+    <div
       ref={parentRef}
-      lastCol={nodeData.lastCol}
-      lastRow={nodeData.lastRow}
       onClick={() => {
         onNodeClick(nodeData.row, nodeData.col);
       }}
-    ></StyledNode>
+      style={{ width: 80, height: 80 }}
+    >
+      <Lottie
+        options={plant1Options}
+        height={80}
+        width={80}
+        speed={2.5}
+        isStopped={!nodeData.isVisited}
+        isPaused={!nodeData.isVisited}
+        eventListeners={[
+          {
+            eventName: "complete",
+            callback: () => {
+              if (animData === plant1) {
+                setAnimData(plant2);
+              } else {
+                setAnimData(plant3);
+              }
+            },
+          },
+        ]}
+      ></Lottie>
+    </div>
   );
 }

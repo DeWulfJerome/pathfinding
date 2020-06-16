@@ -3,51 +3,52 @@ import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
 import Dijkstra from "../algorithms/newDijkstra";
+import * as _ from "lodash";
 
-const GRAPH_ROWS = 7;
-const GRAPH_COLS = 8;
+const GRAPH_ROWS = 10;
+const GRAPH_COLS = 10;
 
 const Grid = styled.div`
-  margin: 0 auto;
   display: grid;
-  grid-template-rows: repeat(${GRAPH_ROWS}, 30px);
-  width: 50px;
-`;
-
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: repeat(${GRAPH_COLS}, 30px);
+  grid-template-rows: repeat(${GRAPH_ROWS}, 80px);
+  grid-template-columns: repeat(${GRAPH_COLS}, 80px);
 `;
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
   const [startNode, setStartNode] = useState("1-1");
-  const [endNode, setEndNode] = useState("7-8");
-  const [grid, setGrid] = useState([]);
+  const [endNode, setEndNode] = useState("10-10");
+  const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
-    buildGrid();
+
+    buildMapGrid();
   }, []);
 
   const testDijkstra = () => {
+    const newMapGrid = _.cloneDeep(newGrid);
     prevShortesPath.forEach((node) => {
-      nodeRefs.current.get(node).style.background = "grey";
+      // nodeRefs.current.get(node).style.background = "transparent";
+      const visitedNode = newMapGrid.get(node);
+      visitedNode.isVisited = false;
     });
     const dijkstra = new Dijkstra(graphData, startNode, endNode);
     const shortestPath = dijkstra.findShortestPath();
     shortestPath.forEach((node) => {
-      nodeRefs.current.get(node).style.background = "orange";
+      // nodeRefs.current.get(node).style.background = "orange";
+      const visitedNode = newMapGrid.get(node);
+      visitedNode.isVisited = true;
     });
+    setNewGrid(newMapGrid);
     setPrevShortestPath(shortestPath);
   };
 
-  const buildGrid = () => {
-    const nodeHolder = [];
+  const buildMapGrid = () => {
+    const mapGrid = new Map();
     for (let row = 0; row < GRAPH_ROWS; row++) {
-      const currentRow = [];
       for (let col = 0; col < GRAPH_COLS; col++) {
         const currentNode = createNode(col + 1, row + 1);
         if (row === GRAPH_ROWS - 1) {
@@ -56,11 +57,10 @@ export default function TestGraph() {
         if (col === GRAPH_COLS - 1) {
           currentNode.lastCol = true;
         }
-        currentRow.push(currentNode);
+        mapGrid.set(`${row + 1}-${col + 1}`, currentNode);
       }
-      nodeHolder.push(currentRow);
     }
-    setGrid(nodeHolder);
+    setNewGrid(mapGrid);
   };
 
   const createNode = (col, row) => {
@@ -78,30 +78,27 @@ export default function TestGraph() {
     };
   };
 
-  const renderNodes = () => {
-    return grid.map((row, i) => {
-      return (
-        <Row key={i}>
-          {row.map((node, i) => (
-            <Node
-              key={i}
-              nodeData={node}
-              onNodeClick={(row, col) => {
-                setStartNode(`${row}-${col}`);
-              }}
-              parentRef={(el) =>
-                nodeRefs.current.set(`${node.row}-${node.col}`, el)
-              }
-            ></Node>
-          ))}
-        </Row>
+  const renderMapNodes = () => {
+    const nodes = [];
+    newGrid.forEach((node) => {
+      nodes.push(
+        <Node
+          key={`${node.row}-${node.col}`}
+          nodeData={node}
+          onNodeClick={(row, col) => {
+            setStartNode(`${row}-${col}`);
+          }}
+          parentRef={(el) =>
+            nodeRefs.current.set(`${node.row}-${node.col}`, el)
+          }
+        ></Node>
       );
     });
+    return nodes;
   };
-
   return (
     <div>
-      <Grid>{renderNodes()}</Grid>
+      <Grid>{renderMapNodes()}</Grid>
       <button onClick={testDijkstra}>log graph</button>
     </div>
   );
