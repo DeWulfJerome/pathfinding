@@ -1,30 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
-import { createGraph } from "../dataStructures/graph";
-import styled from "styled-components";
-import Node from "./Node";
-import Dijkstra from "../algorithms/newDijkstra";
-import * as _ from "lodash";
+import React, { useEffect, useState, useRef } from 'react';
+import { createGraph } from '../dataStructures/graph';
+import styled from 'styled-components';
+import Node from './Node';
+import Dijkstra from '../algorithms/newDijkstra';
+import * as _ from 'lodash';
 
 const GRAPH_ROWS = 10;
 const GRAPH_COLS = 10;
+const PLANT_SIZE = 40;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-rows: repeat(${GRAPH_ROWS}, 80px);
-  grid-template-columns: repeat(${GRAPH_COLS}, 80px);
+  grid-template-rows: repeat(${GRAPH_ROWS}, ${PLANT_SIZE}px);
+  grid-template-columns: repeat(${GRAPH_COLS}, ${PLANT_SIZE}px);
 `;
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState("1-1");
-  const [endNode, setEndNode] = useState("10-10");
+  const [startNode, setStartNode] = useState('1-2');
+  const [endNode, setEndNode] = useState('2-2');
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
-
     buildMapGrid();
   }, []);
 
@@ -67,15 +67,35 @@ export default function TestGraph() {
     return {
       col,
       row,
-      isStart: false,
-      isFinish: false,
+      isStart: startNode === `${row}-${col}` ? true : false,
+      isFinish: endNode === `${row}-${col}` ? true : false,
       distance: Infinity,
       isVisited: false,
       isWall: false,
       previousNode: null,
       lastCol: false,
-      lastRow: false,
+      lastRow: false
     };
+  };
+
+  const setOtherStartNode = (row, col) => {
+    const newMapGrid = _.cloneDeep(newGrid);
+    const prevStartNode = newMapGrid.get(startNode);
+    prevStartNode.isStart = false;
+    const newStartNode = newMapGrid.get(`${row}-${col}`);
+    newStartNode.isStart = true;
+    setStartNode(`${row}-${col}`);
+    setNewGrid(newMapGrid);
+  };
+
+  const setOtherEndNode = (row, col) => {
+    const newMapGrid = _.cloneDeep(newGrid);
+    const prevEndNode = newMapGrid.get(endNode);
+    prevEndNode.isFinish = false;
+    const newEndNode = newMapGrid.get(`${row}-${col}`);
+    newEndNode.isFinish = true;
+    setEndNode(`${row}-${col}`);
+    setNewGrid(newMapGrid);
   };
 
   const renderMapNodes = () => {
@@ -84,9 +104,11 @@ export default function TestGraph() {
       nodes.push(
         <Node
           key={`${node.row}-${node.col}`}
+          plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            setStartNode(`${row}-${col}`);
+            setOtherStartNode(row, col);
+            // setOtherEndNode(row, col);
           }}
           parentRef={(el) =>
             nodeRefs.current.set(`${node.row}-${node.col}`, el)
