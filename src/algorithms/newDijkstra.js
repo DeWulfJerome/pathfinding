@@ -3,14 +3,17 @@ import * as _ from 'lodash';
 export default class Dijkstra {
   constructor(graph, startNode, finishNode) {
     this.graph = graph;
+    console.log(this.graph);
     this.startNode = startNode;
     this.finishNode = finishNode;
   }
 
   getDistancesAndPreviousNodes() {
     const unvisitedNodes = _.cloneDeep(this.graph);
+    // console.log(unvisitedNodes);
     // Set the starting node distance to 0.
-    unvisitedNodes.get(this.startNode).distance = 0;
+    const startNode = unvisitedNodes.get(this.startNode);
+    startNode.distance = 0;
     const previousNodes = new Map();
     const distanceToNodes = new Map();
     const visitedNodesInOrder = [];
@@ -21,7 +24,7 @@ export default class Dijkstra {
       currentNode[1].neighbours.forEach((neighbour) => {
         // For this node, calculate distance of each neighbour from the start node
         if (unvisitedNodes.has(neighbour.name)) {
-          const tempNode = { ...unvisitedNodes.get(neighbour.name) };
+          const tempNode = unvisitedNodes.get(neighbour.name);
           if (distanceToNodes.has(currentNode[0])) {
             tempNode.distance =
               distanceToNodes.get(currentNode[0]) +

@@ -17,8 +17,8 @@ const Grid = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState('1-1');
-  const [endNode, setEndNode] = useState('5-5');
+  const [startNode, setStartNode] = useState('1-2');
+  const [endNode, setEndNode] = useState('2-2');
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
@@ -107,8 +107,8 @@ export default function TestGraph() {
           plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            // setOtherStartNode(row, col);
-            setOtherEndNode(row, col);
+            setOtherStartNode(row, col);
+            // setOtherEndNode(row, col);
           }}
           parentRef={(el) =>
             nodeRefs.current.set(`${node.row}-${node.col}`, el)
