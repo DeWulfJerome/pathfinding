@@ -1,9 +1,7 @@
 const horvertEdgeDistance = 1;
-const diagonalEdgeDistance = parseFloat(
-  Math.sqrt(
-    horvertEdgeDistance * horvertEdgeDistance +
-      horvertEdgeDistance * horvertEdgeDistance
-  ).toFixed(5)
+const diagonalEdgeDistance = Math.sqrt(
+  horvertEdgeDistance * horvertEdgeDistance +
+    horvertEdgeDistance * horvertEdgeDistance
 );
 
 export const createGraph = (rows, cols) => {
