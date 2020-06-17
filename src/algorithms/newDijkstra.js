@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 export default class Dijkstra {
   constructor(graph, startNode, finishNode) {
     this.graph = graph;
-    console.log(this.graph);
     this.startNode = startNode;
     this.finishNode = finishNode;
   }
@@ -53,7 +52,11 @@ export default class Dijkstra {
       // Add the current node to the list of visited nodes / remove from unvisited nodes
       unvisitedNodes.delete(currentNode[0]);
     }
-    return { distances: distanceToNodes, previousNodes, visitedNodesInOrder };
+    return {
+      distances: distanceToNodes,
+      previousNodes,
+      visitedNodesInOrder
+    };
   }
 
   getClosestNode(unvisitedNodes) {
@@ -62,10 +65,9 @@ export default class Dijkstra {
       .shift();
   }
 
-  findShortestPath() {
+  findShortestPath(previousNodes) {
     const nodesInReverseOrder = [this.finishNode];
     let lookupNode = this.finishNode;
-    const { distances, previousNodes } = this.getDistancesAndPreviousNodes();
     while (true) {
       nodesInReverseOrder.push(previousNodes.get(lookupNode));
       lookupNode = previousNodes.get(lookupNode);

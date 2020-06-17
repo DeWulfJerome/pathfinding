@@ -1,0 +1,4 @@
+.visited {
+  border-radius: 100%;
+  border: 1px solid rgba(6, 97, 26, 0.555);
+}

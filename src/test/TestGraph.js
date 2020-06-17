@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, ReactDOM } from 'react';
 import { createGraph } from '../dataStructures/graph';
 import styled from 'styled-components';
 import Node from './Node';
@@ -18,7 +18,7 @@ const Grid = styled.div`
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
   const [startNode, setStartNode] = useState('1-2');
-  const [endNode, setEndNode] = useState('2-2');
+  const [endNode, setEndNode] = useState('8-9');
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
@@ -29,21 +29,41 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
-    const newMapGrid = _.cloneDeep(newGrid);
-    prevShortesPath.forEach((node) => {
-      // nodeRefs.current.get(node).style.background = "transparent";
-      const visitedNode = newMapGrid.get(node);
-      visitedNode.isVisited = false;
+    nodeRefs.current.forEach((node) => {
+      node.classList.remove('visited');
     });
     const dijkstra = new Dijkstra(graphData, startNode, endNode);
-    const shortestPath = dijkstra.findShortestPath();
-    shortestPath.forEach((node) => {
-      // nodeRefs.current.get(node).style.background = "orange";
-      const visitedNode = newMapGrid.get(node);
-      visitedNode.isVisited = true;
-    });
-    setNewGrid(newMapGrid);
-    setPrevShortestPath(shortestPath);
+    const {
+      distances,
+      previousNodes,
+      visitedNodesInOrder
+    } = dijkstra.getDistancesAndPreviousNodes();
+    const shortestPath = dijkstra.findShortestPath(previousNodes);
+    const timeOut = visitedNodesInOrder.length * 20;
+    for (let i = 0; i < visitedNodesInOrder.length; i++) {
+      setTimeout(() => {
+        nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
+      }, i * 20);
+
+      if (visitedNodesInOrder[i] === endNode) {
+        break;
+      }
+    }
+    setTimeout(() => {
+      const newMapGrid = _.cloneDeep(newGrid);
+      prevShortesPath.forEach((node) => {
+        // nodeRefs.current.get(node).style.background = "transparent";
+        const visitedNode = newMapGrid.get(node);
+        visitedNode.isPath = false;
+      });
+      shortestPath.forEach((node) => {
+        // nodeRefs.current.get(node).style.background = "orange";
+        const visitedNode = newMapGrid.get(node);
+        visitedNode.isPath = true;
+      });
+      setNewGrid(newMapGrid);
+      setPrevShortestPath(shortestPath);
+    }, timeOut);
   };
 
   const buildMapGrid = () => {
@@ -71,6 +91,7 @@ export default function TestGraph() {
       isFinish: endNode === `${row}-${col}` ? true : false,
       distance: Infinity,
       isVisited: false,
+      isPath: false,
       isWall: false,
       previousNode: null,
       lastCol: false,

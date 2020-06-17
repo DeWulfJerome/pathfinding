@@ -5,6 +5,8 @@ import plant1 from '../assets/plant1.json';
 import plant2 from '../assets/plant2.json';
 import plant3 from '../assets/plant3.json';
 
+import './Node.css';
+
 const FadeIn = keyframes`
   0% {
     height: 0%;
@@ -23,7 +25,7 @@ const FadeIn = keyframes`
 `;
 
 const complexAnim = (props) => {
-  return props.isStart || props.isFinish || props.isVisited
+  return props.isStart || props.isFinish || props.isPath
     ? css`
         ${FadeIn} 0.9s cubic-bezier(1,.31,.52,1.69) forwards
       `
@@ -65,10 +67,10 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
   const [animData, setAnimData] = useState(plant1);
 
   useEffect(() => {
-    if (!nodeData.isVisited) {
+    if (!nodeData.isPath) {
       setAnimData(plant1);
     }
-  }, [nodeData.isVisited]);
+  }, [nodeData.isPath]);
 
   const plant1Options = {
     loop: false,
@@ -82,7 +84,7 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
   return (
     <PlantPot
       ref={parentRef}
-      isVisited={nodeData.isVisited}
+      isPath={nodeData.isPath}
       isStart={nodeData.isStart}
       isFinish={nodeData.isFinish}
       onClick={() => {
@@ -95,8 +97,8 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
         height={plantSize}
         width={plantSize}
         speed={2.5}
-        isStopped={!nodeData.isVisited}
-        isPaused={!nodeData.isVisited}
+        isStopped={!nodeData.isPath}
+        isPaused={!nodeData.isPath}
         eventListeners={[
           {
             eventName: 'complete',
