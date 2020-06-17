@@ -50,7 +50,7 @@ export default class Dijkstra {
       // Add the current node to the list of visited nodes / remove from unvisited nodes
       unvisitedNodes.delete(currentNode[0]);
     }
-    return { distances: distanceToNodes, previousNodes, visitedeNodesInOrder };
+    return { distances: distanceToNodes, previousNodes, visitedNodesInOrder };
   }
 
   getClosestNode(unvisitedNodes) {

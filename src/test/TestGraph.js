@@ -67,8 +67,8 @@ export default function TestGraph() {
     return {
       col,
       row,
-      isStart: false,
-      isFinish: false,
+      isStart: startNode === `${row}-${col}` ? true : false,
+      isFinish: endNode === `${row}-${col}` ? true : false,
       distance: Infinity,
       isVisited: false,
       isWall: false,
@@ -76,6 +76,26 @@ export default function TestGraph() {
       lastCol: false,
       lastRow: false
     };
+  };
+
+  const setOtherStartNode = (row, col) => {
+    const newMapGrid = _.cloneDeep(newGrid);
+    const prevStartNode = newMapGrid.get(startNode);
+    prevStartNode.isStart = false;
+    const newStartNode = newMapGrid.get(`${row}-${col}`);
+    newStartNode.isStart = true;
+    setStartNode(`${row}-${col}`);
+    setNewGrid(newMapGrid);
+  };
+
+  const setOtherEndNode = (row, col) => {
+    const newMapGrid = _.cloneDeep(newGrid);
+    const prevEndNode = newMapGrid.get(endNode);
+    prevEndNode.isFinish = false;
+    const newEndNode = newMapGrid.get(`${row}-${col}`);
+    newEndNode.isFinish = true;
+    setEndNode(`${row}-${col}`);
+    setNewGrid(newMapGrid);
   };
 
   const renderMapNodes = () => {
@@ -87,7 +107,8 @@ export default function TestGraph() {
           plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            setStartNode(`${row}-${col}`);
+            // setOtherStartNode(row, col);
+            setOtherEndNode(row, col);
           }}
           parentRef={(el) =>
             nodeRefs.current.set(`${node.row}-${node.col}`, el)
