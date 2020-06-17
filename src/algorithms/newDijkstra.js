@@ -13,6 +13,7 @@ export default class Dijkstra {
     unvisitedNodes.get(this.startNode).distance = 0;
     const previousNodes = new Map();
     const distanceToNodes = new Map();
+    const visitedNodesInOrder = [];
     while (unvisitedNodes.size) {
       // Visit the node with the smallest known distance from the start node
       const currentNode = this.getClosestNode(unvisitedNodes);
@@ -44,10 +45,12 @@ export default class Dijkstra {
           }
         }
       });
+      // Push the current node name into visitedNodesInOrder to be able to show the algorithm working
+      visitedNodesInOrder.push(currentNode[0]);
       // Add the current node to the list of visited nodes / remove from unvisited nodes
       unvisitedNodes.delete(currentNode[0]);
     }
-    return { distances: distanceToNodes, previousNodes };
+    return { distances: distanceToNodes, previousNodes, visitedeNodesInOrder };
   }
 
   getClosestNode(unvisitedNodes) {
