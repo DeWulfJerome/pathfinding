@@ -7,7 +7,8 @@ import * as _ from 'lodash';
 
 const GRAPH_ROWS = 10;
 const GRAPH_COLS = 10;
-const PLANT_SIZE = 40;
+const PLANT_SIZE = 60;
+const ANIMATION_DELAY = 50;
 
 const Grid = styled.div`
   display: grid;
@@ -17,8 +18,8 @@ const Grid = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState('1-2');
-  const [endNode, setEndNode] = useState('8-9');
+  const [startNode, setStartNode] = useState('1-1');
+  const [endNode, setEndNode] = useState('5-5');
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
@@ -29,6 +30,14 @@ export default function TestGraph() {
   }, []);
 
   const testDijkstra = () => {
+    const newMapGrid = _.cloneDeep(newGrid);
+    prevShortesPath.forEach((node) => {
+      // nodeRefs.current.get(node).style.background = "transparent";
+      const visitedNode = newMapGrid.get(node);
+      visitedNode.isPath = false;
+      visitedNode.isVisited = false;
+    });
+
     nodeRefs.current.forEach((node) => {
       node.classList.remove('visited');
     });
@@ -39,27 +48,30 @@ export default function TestGraph() {
       visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
     const shortestPath = dijkstra.findShortestPath(previousNodes);
-    const timeOut = visitedNodesInOrder.length * 20;
-    for (let i = 0; i < visitedNodesInOrder.length; i++) {
+
+    const endNodeIndex = visitedNodesInOrder.findIndex(
+      (val) => val === endNode
+    );
+
+    const timeOut = endNodeIndex * ANIMATION_DELAY;
+    for (let i = 0; i < endNodeIndex; i++) {
       setTimeout(() => {
         nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
-      }, i * 20);
+      }, i * ANIMATION_DELAY);
+
+      const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
+      visitedNode.isVisited = true;
 
       if (visitedNodesInOrder[i] === endNode) {
         break;
       }
     }
     setTimeout(() => {
-      const newMapGrid = _.cloneDeep(newGrid);
-      prevShortesPath.forEach((node) => {
-        // nodeRefs.current.get(node).style.background = "transparent";
-        const visitedNode = newMapGrid.get(node);
-        visitedNode.isPath = false;
-      });
       shortestPath.forEach((node) => {
         // nodeRefs.current.get(node).style.background = "orange";
         const visitedNode = newMapGrid.get(node);
         visitedNode.isPath = true;
+        visitedNode.isVisited = true;
       });
       setNewGrid(newMapGrid);
       setPrevShortestPath(shortestPath);
