@@ -47,35 +47,39 @@ export default function TestGraph() {
       previousNodes,
       visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
-    const shortestPath = dijkstra.findShortestPath(previousNodes);
+    if (distances) {
+      const shortestPath = dijkstra.findShortestPath(previousNodes);
 
-    const endNodeIndex = visitedNodesInOrder.findIndex(
-      (val) => val === endNode
-    );
+      const endNodeIndex = visitedNodesInOrder.findIndex(
+        (val) => val === endNode
+      );
 
-    const timeOut = endNodeIndex * ANIMATION_DELAY;
-    for (let i = 0; i < endNodeIndex; i++) {
-      setTimeout(() => {
-        nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
-      }, i * ANIMATION_DELAY);
+      const timeOut = endNodeIndex * ANIMATION_DELAY;
+      for (let i = 0; i < endNodeIndex; i++) {
+        setTimeout(() => {
+          nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
+        }, i * ANIMATION_DELAY);
 
-      const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
-      visitedNode.isVisited = true;
-
-      if (visitedNodesInOrder[i] === endNode) {
-        break;
-      }
-    }
-    setTimeout(() => {
-      shortestPath.forEach((node) => {
-        // nodeRefs.current.get(node).style.background = "orange";
-        const visitedNode = newMapGrid.get(node);
-        visitedNode.isPath = true;
+        const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
         visitedNode.isVisited = true;
-      });
-      setNewGrid(newMapGrid);
-      setPrevShortestPath(shortestPath);
-    }, timeOut);
+
+        if (visitedNodesInOrder[i] === endNode) {
+          break;
+        }
+      }
+      setTimeout(() => {
+        shortestPath.forEach((node) => {
+          // nodeRefs.current.get(node).style.background = "orange";
+          const visitedNode = newMapGrid.get(node);
+          visitedNode.isPath = true;
+          visitedNode.isVisited = true;
+        });
+        setNewGrid(newMapGrid);
+        setPrevShortestPath(shortestPath);
+      }, timeOut);
+    } else {
+      alert('you are stuck');
+    }
   };
 
   const buildMapGrid = () => {
@@ -131,6 +135,14 @@ export default function TestGraph() {
     setNewGrid(newMapGrid);
   };
 
+  const setWall = (row, col) => {
+    const newMapGrid = _.cloneDeep(graphData);
+    const wallNode = newMapGrid.get(`${row}-${col}`);
+    wallNode.isWall = !wallNode.isWall;
+    setgraphData(newMapGrid);
+    console.log(wallNode);
+  };
+
   const renderMapNodes = () => {
     const nodes = [];
     newGrid.forEach((node) => {
@@ -140,8 +152,9 @@ export default function TestGraph() {
           plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            setOtherStartNode(row, col);
+            // setOtherStartNode(row, col);
             // setOtherEndNode(row, col);
+            setWall(row, col);
           }}
           parentRef={(el) =>
             nodeRefs.current.set(`${node.row}-${node.col}`, el)

@@ -75,7 +75,8 @@ const addLinkedCenterNodes = (i, j, graph) => {
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -88,7 +89,8 @@ const addLinkedFirstColNodes = (i, j, graph) => {
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -101,7 +103,8 @@ const addLinkedLastColNodes = (i, j, graph) => {
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -114,7 +117,8 @@ const addLinkedFirstRowNodes = (i, j, graph) => {
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -125,7 +129,8 @@ const addLinkedFirstRowFirstColNode = (i, j, graph) => {
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -136,7 +141,8 @@ const addLinkedFirstRowLastColNode = (i, j, graph) => {
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -149,7 +155,8 @@ const addLinkedLastRowNodes = (i, j, graph) => {
       { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -160,7 +167,8 @@ const addLinkedLastRowFirstColNode = (i, j, graph) => {
       { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };
 
@@ -171,6 +179,7 @@ const addLinkedLastRowLastColNode = (i, j, graph) => {
       { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
-    distance: Infinity
+    distance: Infinity,
+    isWall: false
   });
 };

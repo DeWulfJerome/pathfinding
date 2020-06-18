@@ -18,6 +18,15 @@ export default class Dijkstra {
     while (unvisitedNodes.size) {
       // Visit the node with the smallest known distance from the start node
       const currentNode = this.getClosestNode(unvisitedNodes);
+      // Skip node if its a wall
+      if (currentNode[1].isWall) {
+        unvisitedNodes.delete(currentNode[0]);
+        continue;
+      }
+      // If no nodes with distance smaller than infinity can be found, we must be stuck.
+      if (currentNode[1].distance === Infinity) {
+        return false;
+      }
       // For this node, check its unvisited neighbours
       currentNode[1].neighbours.forEach((neighbour) => {
         // For this node, calculate distance of each neighbour from the start node
