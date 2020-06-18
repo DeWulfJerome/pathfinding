@@ -5,6 +5,8 @@ import plant1 from '../assets/plant1.json';
 import plant2 from '../assets/plant2.json';
 import plant3 from '../assets/plant3.json';
 
+import './Node.css';
+
 const FadeIn = keyframes`
   0% {
     height: 0%;
@@ -22,12 +24,33 @@ const FadeIn = keyframes`
   }
 `;
 
-const complexAnim = (props) => {
-  return props.isStart || props.isFinish || props.isVisited
+const complexFadeAnim = (props) => {
+  return props.isStart || props.isFinish || props.isPath
     ? css`
         ${FadeIn} 0.9s cubic-bezier(1,.31,.52,1.69) forwards
       `
     : css`none`;
+};
+
+const riseAnim = keyframes`
+  0%{
+    box-shadow: inset 0 0 12px 5px rgba(36, 137, 81, 0.12);
+  }
+  50%{
+    box-shadow: none;
+  }
+  100%{
+    box-shadow: 0 0 12px 5px rgba(36, 137, 81, 0.12);
+  }
+`;
+
+const complexRiseAnim = (props) => {
+  return (
+    props.isPath &&
+    css`
+      animation: ${riseAnim} 0.8s ease-in-out forwards;
+    `
+  );
 };
 
 const PlantPot = styled.div`
@@ -35,6 +58,9 @@ const PlantPot = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px;
+  border-radius: 10%;
+${complexRiseAnim}
   &:before {
     position: absolute;
     content: '';
@@ -57,7 +83,7 @@ const PlantPot = styled.div`
       rgba(17, 153, 142, 0.2)
     );`}
     border-radius: 100%;
-    animation: ${complexAnim};
+    animation: ${complexFadeAnim};
   }
 `;
 
@@ -65,10 +91,10 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
   const [animData, setAnimData] = useState(plant1);
 
   useEffect(() => {
-    if (!nodeData.isVisited) {
+    if (!nodeData.isPath) {
       setAnimData(plant1);
     }
-  }, [nodeData.isVisited]);
+  }, [nodeData.isPath]);
 
   const plant1Options = {
     loop: false,
@@ -82,9 +108,10 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
   return (
     <PlantPot
       ref={parentRef}
-      isVisited={nodeData.isVisited}
+      isPath={nodeData.isPath}
       isStart={nodeData.isStart}
       isFinish={nodeData.isFinish}
+      isVisited={nodeData.isVisited}
       onClick={() => {
         onNodeClick(nodeData.row, nodeData.col);
       }}
@@ -95,8 +122,8 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
         height={plantSize}
         width={plantSize}
         speed={2.5}
-        isStopped={!nodeData.isVisited}
-        isPaused={!nodeData.isVisited}
+        isStopped={!nodeData.isPath}
+        isPaused={!nodeData.isPath}
         eventListeners={[
           {
             eventName: 'complete',

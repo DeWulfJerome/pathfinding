@@ -3,14 +3,12 @@ import * as _ from 'lodash';
 export default class Dijkstra {
   constructor(graph, startNode, finishNode) {
     this.graph = graph;
-    console.log(this.graph);
     this.startNode = startNode;
     this.finishNode = finishNode;
   }
 
   getDistancesAndPreviousNodes() {
     const unvisitedNodes = _.cloneDeep(this.graph);
-    // console.log(unvisitedNodes);
     // Set the starting node distance to 0.
     const startNode = unvisitedNodes.get(this.startNode);
     startNode.distance = 0;
@@ -33,13 +31,16 @@ export default class Dijkstra {
             // Is startnode
             tempNode.distance = neighbour.distanceToNeighbour;
           }
-
+          unvisitedNodes.get(neighbour.name);
           if (distanceToNodes.has(neighbour.name)) {
             if (distanceToNodes.get(neighbour.name) > tempNode.distance) {
               // If the calc distance is less than the known distance, update the shortest path
               distanceToNodes.set(neighbour.name, tempNode.distance);
               // Update the previous node for each of the updated distances
               previousNodes.set(neighbour.name, currentNode[0]);
+            } else {
+              // Reset the distance in the unvisited node to the closest known distance
+              tempNode.distance = distanceToNodes.get(neighbour.name);
             }
           } else {
             distanceToNodes.set(neighbour.name, tempNode.distance);
@@ -53,7 +54,11 @@ export default class Dijkstra {
       // Add the current node to the list of visited nodes / remove from unvisited nodes
       unvisitedNodes.delete(currentNode[0]);
     }
-    return { distances: distanceToNodes, previousNodes, visitedNodesInOrder };
+    return {
+      distances: distanceToNodes,
+      previousNodes,
+      visitedNodesInOrder
+    };
   }
 
   getClosestNode(unvisitedNodes) {
@@ -62,10 +67,9 @@ export default class Dijkstra {
       .shift();
   }
 
-  findShortestPath() {
+  findShortestPath(previousNodes) {
     const nodesInReverseOrder = [this.finishNode];
     let lookupNode = this.finishNode;
-    const { distances, previousNodes } = this.getDistancesAndPreviousNodes();
     while (true) {
       nodesInReverseOrder.push(previousNodes.get(lookupNode));
       lookupNode = previousNodes.get(lookupNode);
