@@ -9,7 +9,6 @@ export default class Dijkstra {
 
   getDistancesAndPreviousNodes() {
     const unvisitedNodes = _.cloneDeep(this.graph);
-    // console.log(unvisitedNodes);
     // Set the starting node distance to 0.
     const startNode = unvisitedNodes.get(this.startNode);
     startNode.distance = 0;
@@ -32,13 +31,16 @@ export default class Dijkstra {
             // Is startnode
             tempNode.distance = neighbour.distanceToNeighbour;
           }
-
+          unvisitedNodes.get(neighbour.name);
           if (distanceToNodes.has(neighbour.name)) {
             if (distanceToNodes.get(neighbour.name) > tempNode.distance) {
               // If the calc distance is less than the known distance, update the shortest path
               distanceToNodes.set(neighbour.name, tempNode.distance);
               // Update the previous node for each of the updated distances
               previousNodes.set(neighbour.name, currentNode[0]);
+            } else {
+              // Reset the distance in the unvisited node to the closest known distance
+              tempNode.distance = distanceToNodes.get(neighbour.name);
             }
           } else {
             distanceToNodes.set(neighbour.name, tempNode.distance);

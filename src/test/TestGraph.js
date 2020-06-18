@@ -18,8 +18,8 @@ const Grid = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState('1-1');
-  const [endNode, setEndNode] = useState('5-5');
+  const [startNode, setStartNode] = useState('2-2');
+  const [endNode, setEndNode] = useState('10-10');
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
