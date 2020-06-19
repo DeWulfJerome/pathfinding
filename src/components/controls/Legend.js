@@ -4,7 +4,7 @@ import StyleConstants from "../../StyleConstants";
 import Star from "../nodes/Star";
 
 const StyledLegendContainer = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem;
   border-radius: 40px;
   background-color: ${StyleConstants.colors.blue.dark};
   display: grid;

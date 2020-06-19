@@ -10,9 +10,12 @@ const ContentContainer = styled.div`
 
 const ControlsContainer = styled.div`
   display: grid;
-  grid-template-columns: 4fr 3fr;
+  grid-template-columns: 3fr 4fr;
   align-items: center;
   grid-gap: 1rem;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const H1 = styled.h1`
@@ -58,6 +61,12 @@ export default function Controls({ onChangeAlterMode }) {
     <ControlsContainer>
       <ContentContainer>
         <H1>
+          Check out this <OrangeText>Pathfinding Visualizer!</OrangeText>
+        </H1>
+        <SubText>Created by Jerome De Wulf</SubText>
+      </ContentContainer>
+      <ContentContainer>
+        <H1>
           Update your <RedText>settings</RedText>
         </H1>
         <Select
@@ -70,12 +79,6 @@ export default function Controls({ onChangeAlterMode }) {
           <Options value="isStart">Change StartNode</Options>
           <Options value="isFinish">Change FinishNode</Options>
         </Select>
-      </ContentContainer>
-      <ContentContainer>
-        <H1>
-          Check out this <OrangeText>Pathfinding Visualizer!</OrangeText>
-        </H1>
-        <SubText>Created by Jerome De Wulf</SubText>
       </ContentContainer>
     </ControlsContainer>
   );

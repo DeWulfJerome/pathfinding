@@ -12,8 +12,8 @@ import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
 import Star from "../components/nodes/Star";
 
-const GRAPH_ROWS = 15;
-const GRAPH_COLS = 30;
+let GRAPH_ROWS = 5;
+let GRAPH_COLS = 10;
 const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
@@ -35,11 +35,20 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
 
   const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
-  const [endNode, setEndNode] = useState("13-26");
+  const [endNode, setEndNode] = useState("4-4");
   const nodeRefs = useRef(new Map());
+  const container = useRef();
+  const gridRef = useRef();
 
   useEffect(() => {
-    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
+    const containerWidth = container.current.offsetWidth;
+    const containerHeight = container.current.offsetHeight;
+    const newColCount = Math.floor(containerWidth / PLANT_SIZE);
+    const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
+    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
+    setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
 
   const dijkstraReWrite = async () => {
@@ -175,7 +184,11 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
     });
     return nodes;
   };
-  return <Grid>{renderStars()}</Grid>;
+  return (
+    <div ref={container} style={{ flex: 1 }}>
+      <Grid ref={gridRef}>{renderStars()}</Grid>
+    </div>
+  );
 });
 
 export default TestGraph;

@@ -9,7 +9,6 @@ const StyledControlsContainer = styled.div`
   padding: 1rem;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
-  margin-bottom: 2rem;
 `;
 
 const ButtonContainer = styled.div`
