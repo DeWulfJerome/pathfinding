@@ -6,9 +6,9 @@ import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
 import Star from "../components/nodes/Star";
 
-const GRAPH_ROWS = 8;
-const GRAPH_COLS = 8;
-const PLANT_SIZE = 60;
+const GRAPH_ROWS = 20;
+const GRAPH_COLS = 20;
+const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 50;
 
 const Grid = styled.div`
@@ -24,7 +24,6 @@ export default function TestGraph() {
   const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
   const [endNode, setEndNode] = useState("7-7");
-  const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
@@ -57,7 +56,6 @@ export default function TestGraph() {
       const endNodeIndex = visitedNodesInOrder.findIndex(
         (val) => val === endNode
       );
-      const animationFullDuration = endNodeIndex * ANIMATION_DELAY;
       // Set each graphNode contained in visitedNodesInOrder to isVisited = true
       for (let i = 0; i < endNodeIndex; i++) {
         setTimeout(() => {
@@ -66,11 +64,11 @@ export default function TestGraph() {
             newGraphData.get(visitedNodesInOrder[i]).isVisited = true;
             return newGraphData;
           });
+          if (i === endNodeIndex - 1) {
+            resolve();
+          }
         }, i * ANIMATION_DELAY);
       }
-      setTimeout(() => {
-        resolve();
-      }, animationFullDuration + ANIMATION_DELAY);
     });
   };
 
@@ -149,9 +147,6 @@ export default function TestGraph() {
             // setOtherEndNode(row, col);
             setWall(row, col);
           }}
-          parentRef={(el) =>
-            nodeRefs.current.set(`${node.row}-${node.col}`, el)
-          }
         ></Star>
       );
     });

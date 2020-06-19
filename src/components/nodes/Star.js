@@ -36,23 +36,25 @@ const complexPulse = (props) => {
 };
 
 const Dot = styled.div`
-  height: ${(props) => (props.isStart || props.isFinish ? "6px" : "3px")};
-  width: ${(props) => (props.isStart || props.isFinish ? "6px" : "3px")};
+  height: ${(props) =>
+    props.isStart || props.isFinish || props.isPath ? "8px" : "3px"};
+  width: ${(props) =>
+    props.isStart || props.isFinish || props.isPath ? "8px" : "3px"};
   transition: all 0.3s ease;
   background: ${(props) =>
     props.isStart
-      ? "#62ff00"
+      ? "#00fff3"
       : props.isFinish
-      ? "#ff4700"
+      ? "#ff2f00"
       : props.isPath
-      ? "#fcff46"
+      ? "#46ff6e"
       : "#fff"};
   opacity: ${(props) =>
     props.isStart || props.isFinish || props.isPath
       ? "1"
       : props.isWall
       ? "0"
-      : "0.34"};
+      : "0.25"};
   filter: blur(1.3px);
   border-radius: 100%;
   ${complexPulse}
@@ -60,14 +62,12 @@ const Dot = styled.div`
 
 export default function Star({
   nodeData,
-  parentRef,
   onNodeClick,
   animationDelay,
   plantSize,
 }) {
   return (
     <StarHolder
-      ref={parentRef}
       onMouseDown={(e) => {
         e.preventDefault();
         onNodeClick(nodeData.row, nodeData.col);
