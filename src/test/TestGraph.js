@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Node from "./Node";
 import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
+import Star from "../components/nodes/Star";
 
 const GRAPH_ROWS = 8;
 const GRAPH_COLS = 8;
@@ -14,26 +15,27 @@ const Grid = styled.div`
   display: grid;
   grid-template-rows: repeat(${GRAPH_ROWS}, ${PLANT_SIZE}px);
   grid-template-columns: repeat(${GRAPH_COLS}, ${PLANT_SIZE}px);
+  margin-left: auto;
+  margin-right: auto;
+  width: ${GRAPH_ROWS * PLANT_SIZE}px;
 `;
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
+  const [newGrid, setNewGrid] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
   const [endNode, setEndNode] = useState("7-7");
-  const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
-
-    buildMapGrid();
+    setNewGrid(buildMapGrid(GRAPH_ROWS, GRAPH_COLS));
   }, []);
 
   const testDijkstra = () => {
     const newMapGrid = _.cloneDeep(newGrid);
     prevShortesPath.forEach((node) => {
-      // nodeRefs.current.get(node).style.background = "transparent";
       const visitedNode = newMapGrid.get(node);
       visitedNode.isPath = false;
       visitedNode.isVisited = false;
@@ -61,16 +63,12 @@ export default function TestGraph() {
           nodeRefs.current.get(visitedNodesInOrder[i]).classList.add("visited");
         }, i * ANIMATION_DELAY);
 
-        const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
-        visitedNode.isVisited = true;
-
         if (visitedNodesInOrder[i] === endNode) {
           break;
         }
       }
       setTimeout(() => {
         shortestPath.forEach((node) => {
-          // nodeRefs.current.get(node).style.background = "orange";
           const visitedNode = newMapGrid.get(node);
           visitedNode.isPath = true;
           visitedNode.isVisited = true;
@@ -83,7 +81,7 @@ export default function TestGraph() {
     }
   };
 
-  const buildMapGrid = () => {
+  const buildMapGrid = (GRAPH_ROWS, GRAPH_COLS) => {
     const mapGrid = new Map();
     for (let row = 0; row < GRAPH_ROWS; row++) {
       for (let col = 0; col < GRAPH_COLS; col++) {
@@ -97,7 +95,7 @@ export default function TestGraph() {
         mapGrid.set(`${row + 1}-${col + 1}`, currentNode);
       }
     }
-    setNewGrid(mapGrid);
+    return mapGrid;
   };
 
   const createNode = (col, row) => {
@@ -166,12 +164,33 @@ export default function TestGraph() {
         ></Node>
       );
     });
+    return nodes;
+  };
 
+  const renderStars = () => {
+    const nodes = [];
+    newGrid.forEach((node) => {
+      nodes.push(
+        <Star
+          key={`${node.row}-${node.col}`}
+          plantsize={PLANT_SIZE}
+          nodeData={node}
+          onNodeClick={(row, col) => {
+            // setOtherStartNode(row, col);
+            // setOtherEndNode(row, col);
+            setWall(row, col);
+          }}
+          parentRef={(el) =>
+            nodeRefs.current.set(`${node.row}-${node.col}`, el)
+          }
+        ></Star>
+      );
+    });
     return nodes;
   };
   return (
-    <div>
-      <Grid>{renderMapNodes()}</Grid>
+    <div style={{ background: "#111830" }}>
+      <Grid>{renderStars()}</Grid>
       <button onClick={testDijkstra}>log graph</button>
     </div>
   );
