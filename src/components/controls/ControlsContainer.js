@@ -38,10 +38,10 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-export default function ControlsContainer({ visualize }) {
+export default function ControlsContainer({ visualize, onChangeAlterMode }) {
   return (
     <StyledControlsContainer>
-      <Controls></Controls>
+      <Controls onChangeAlterMode={onChangeAlterMode}></Controls>
       <Legend></Legend>
       <ButtonContainer>
         <Button

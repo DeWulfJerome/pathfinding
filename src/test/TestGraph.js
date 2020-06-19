@@ -26,7 +26,7 @@ const Grid = styled.div`
   width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-const TestGraph = forwardRef((props, ref) => {
+const TestGraph = forwardRef(({ alterMode }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
       dijkstraReWrite();
@@ -145,6 +145,19 @@ const TestGraph = forwardRef((props, ref) => {
     return nodes;
   };
 
+  const changeNodeFunction = (alterMode, row, col) => {
+    switch (alterMode) {
+      case "isWall":
+        setWall(row, col);
+        break;
+      case "isStart":
+        setOtherStartNode(row, col);
+        break;
+      case "isFinish":
+        setOtherEndNode(row, col);
+    }
+  };
+
   const renderStars = () => {
     const nodes = [];
     graphData.forEach((node) => {
@@ -155,9 +168,7 @@ const TestGraph = forwardRef((props, ref) => {
           animationDelay={ANIMATION_DELAY}
           nodeData={node}
           onNodeClick={(row, col) => {
-            // setOtherStartNode(row, col);
-            // setOtherEndNode(row, col);
-            setWall(row, col);
+            changeNodeFunction(alterMode, row, col);
           }}
         ></Star>
       );

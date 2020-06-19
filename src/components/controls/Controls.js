@@ -30,11 +30,21 @@ const SubText = styled.p`
   margin: 0;
 `;
 
-export default function Controls() {
+export default function Controls({ onChangeAlterMode }) {
   return (
     <ControlsContainer>
-      <div>controls</div>
-
+      <div>
+        <select
+          name="alterMode"
+          onChange={(e) => {
+            onChangeAlterMode(e.target.value);
+          }}
+        >
+          <option value="isWall">Destroy nodes</option>
+          <option value="isStart">Change StartNode</option>
+          <option value="isFinish">Change FinishNode</option>
+        </select>
+      </div>
       <ContentContainer>
         <H1>
           Check out this <OrangeText>Pathfinding Visualizer!</OrangeText>
