@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef, ReactDOM } from 'react';
-import { createGraph } from '../dataStructures/graph';
-import styled from 'styled-components';
-import Node from './Node';
-import Dijkstra from '../algorithms/newDijkstra';
-import * as _ from 'lodash';
+import React, { useEffect, useState, useRef } from "react";
+import { createGraph } from "../dataStructures/graph";
+import styled from "styled-components";
+import Node from "./Node";
+import Dijkstra from "../algorithms/newDijkstra";
+import * as _ from "lodash";
 
-const GRAPH_ROWS = 10;
-const GRAPH_COLS = 10;
+const GRAPH_ROWS = 8;
+const GRAPH_COLS = 8;
 const PLANT_SIZE = 60;
 const ANIMATION_DELAY = 50;
 
@@ -18,14 +18,15 @@ const Grid = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState('2-2');
-  const [endNode, setEndNode] = useState('10-10');
+  const [startNode, setStartNode] = useState("2-2");
+  const [endNode, setEndNode] = useState("7-7");
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
+
     buildMapGrid();
   }, []);
 
@@ -39,43 +40,47 @@ export default function TestGraph() {
     });
 
     nodeRefs.current.forEach((node) => {
-      node.classList.remove('visited');
+      node.classList.remove("visited");
     });
     const dijkstra = new Dijkstra(graphData, startNode, endNode);
     const {
       distances,
       previousNodes,
-      visitedNodesInOrder
+      visitedNodesInOrder,
     } = dijkstra.getDistancesAndPreviousNodes();
-    const shortestPath = dijkstra.findShortestPath(previousNodes);
+    if (distances) {
+      const shortestPath = dijkstra.findShortestPath(previousNodes);
 
-    const endNodeIndex = visitedNodesInOrder.findIndex(
-      (val) => val === endNode
-    );
+      const endNodeIndex = visitedNodesInOrder.findIndex(
+        (val) => val === endNode
+      );
 
-    const timeOut = endNodeIndex * ANIMATION_DELAY;
-    for (let i = 0; i < endNodeIndex; i++) {
-      setTimeout(() => {
-        nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
-      }, i * ANIMATION_DELAY);
+      const timeOut = endNodeIndex * ANIMATION_DELAY;
+      for (let i = 0; i < endNodeIndex; i++) {
+        setTimeout(() => {
+          nodeRefs.current.get(visitedNodesInOrder[i]).classList.add("visited");
+        }, i * ANIMATION_DELAY);
 
-      const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
-      visitedNode.isVisited = true;
-
-      if (visitedNodesInOrder[i] === endNode) {
-        break;
-      }
-    }
-    setTimeout(() => {
-      shortestPath.forEach((node) => {
-        // nodeRefs.current.get(node).style.background = "orange";
-        const visitedNode = newMapGrid.get(node);
-        visitedNode.isPath = true;
+        const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
         visitedNode.isVisited = true;
-      });
-      setNewGrid(newMapGrid);
-      setPrevShortestPath(shortestPath);
-    }, timeOut);
+
+        if (visitedNodesInOrder[i] === endNode) {
+          break;
+        }
+      }
+      setTimeout(() => {
+        shortestPath.forEach((node) => {
+          // nodeRefs.current.get(node).style.background = "orange";
+          const visitedNode = newMapGrid.get(node);
+          visitedNode.isPath = true;
+          visitedNode.isVisited = true;
+        });
+        setNewGrid(newMapGrid);
+        setPrevShortestPath(shortestPath);
+      }, timeOut);
+    } else {
+      alert("you are stuck");
+    }
   };
 
   const buildMapGrid = () => {
@@ -107,7 +112,7 @@ export default function TestGraph() {
       isWall: false,
       previousNode: null,
       lastCol: false,
-      lastRow: false
+      lastRow: false,
     };
   };
 
@@ -131,6 +136,17 @@ export default function TestGraph() {
     setNewGrid(newMapGrid);
   };
 
+  const setWall = (row, col) => {
+    const newGraphData = _.cloneDeep(graphData);
+    const newMapGrid = _.cloneDeep(newGrid);
+    const graphWallNode = newGraphData.get(`${row}-${col}`);
+    const gridWallNode = newMapGrid.get(`${row}-${col}`);
+    graphWallNode.isWall = !graphWallNode.isWall;
+    gridWallNode.isWall = !gridWallNode.isWall;
+    setgraphData(newGraphData);
+    setNewGrid(newMapGrid);
+  };
+
   const renderMapNodes = () => {
     const nodes = [];
     newGrid.forEach((node) => {
@@ -140,8 +156,9 @@ export default function TestGraph() {
           plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            setOtherStartNode(row, col);
+            // setOtherStartNode(row, col);
             // setOtherEndNode(row, col);
+            setWall(row, col);
           }}
           parentRef={(el) =>
             nodeRefs.current.set(`${node.row}-${node.col}`, el)
@@ -149,6 +166,7 @@ export default function TestGraph() {
         ></Node>
       );
     });
+
     return nodes;
   };
   return (
