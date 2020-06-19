@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
@@ -6,10 +12,10 @@ import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
 import Star from "../components/nodes/Star";
 
-const GRAPH_ROWS = 20;
-const GRAPH_COLS = 20;
+const GRAPH_ROWS = 15;
+const GRAPH_COLS = 30;
 const PLANT_SIZE = 35;
-const ANIMATION_DELAY = 50;
+const ANIMATION_DELAY = 100;
 
 const Grid = styled.div`
   display: grid;
@@ -17,13 +23,19 @@ const Grid = styled.div`
   grid-template-columns: repeat(${GRAPH_COLS}, ${PLANT_SIZE}px);
   margin-left: auto;
   margin-right: auto;
-  width: ${GRAPH_ROWS * PLANT_SIZE}px;
+  width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-export default function TestGraph() {
+const TestGraph = forwardRef((props, ref) => {
+  useImperativeHandle(ref, () => ({
+    visualizeAlgo() {
+      dijkstraReWrite();
+    },
+  }));
+
   const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
-  const [endNode, setEndNode] = useState("7-7");
+  const [endNode, setEndNode] = useState("13-26");
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
@@ -152,10 +164,7 @@ export default function TestGraph() {
     });
     return nodes;
   };
-  return (
-    <div>
-      <Grid>{renderStars()}</Grid>
-      <button onClick={dijkstraReWrite}>log graph</button>
-    </div>
-  );
-}
+  return <Grid>{renderStars()}</Grid>;
+});
+
+export default TestGraph;

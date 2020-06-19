@@ -4,7 +4,7 @@ const StyleConstants = {
       dark: "#252A4A",
       medium: "#293B61",
       light: "#2894DD",
-      shade: "rgba(40, 148, 221, .45)",
+      shade: "rgba(40, 148, 221, .35)",
       font: "#5e73a0",
     },
     red: {

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./App.css";
 import TestGraph from "./test/TestGraph";
 import ControlsContainer from "./components/controls/ControlsContainer";
 
 function App() {
+  const visualizer = useRef();
+  const visualize = (algoType) => {
+    visualizer.current.visualizeAlgo();
+  };
   return (
-    <div className="App">
-      <ControlsContainer></ControlsContainer>
-      <TestGraph></TestGraph>
-    </div>
+    <>
+      <ControlsContainer visualize={visualize}></ControlsContainer>
+      <TestGraph ref={visualizer}></TestGraph>
+    </>
   );
 }
 
