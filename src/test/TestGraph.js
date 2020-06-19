@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
@@ -6,10 +12,10 @@ import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
 import Star from "../components/nodes/Star";
 
-const GRAPH_ROWS = 20;
-const GRAPH_COLS = 20;
+let GRAPH_ROWS = 5;
+let GRAPH_COLS = 10;
 const PLANT_SIZE = 35;
-const ANIMATION_DELAY = 50;
+const ANIMATION_DELAY = 100;
 
 const Grid = styled.div`
   display: grid;
@@ -17,17 +23,32 @@ const Grid = styled.div`
   grid-template-columns: repeat(${GRAPH_COLS}, ${PLANT_SIZE}px);
   margin-left: auto;
   margin-right: auto;
-  width: ${GRAPH_ROWS * PLANT_SIZE}px;
+  width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-export default function TestGraph() {
+const TestGraph = forwardRef(({ alterMode }, ref) => {
+  useImperativeHandle(ref, () => ({
+    visualizeAlgo() {
+      dijkstraReWrite();
+    },
+  }));
+
   const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
-  const [endNode, setEndNode] = useState("7-7");
+  const [endNode, setEndNode] = useState("4-4");
   const nodeRefs = useRef(new Map());
+  const container = useRef();
+  const gridRef = useRef();
 
   useEffect(() => {
-    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
+    const containerWidth = container.current.offsetWidth;
+    const containerHeight = container.current.offsetHeight;
+    const newColCount = Math.floor(containerWidth / PLANT_SIZE);
+    const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
+    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
+    setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
 
   const dijkstraReWrite = async () => {
@@ -133,6 +154,19 @@ export default function TestGraph() {
     return nodes;
   };
 
+  const changeNodeFunction = (alterMode, row, col) => {
+    switch (alterMode) {
+      case "isWall":
+        setWall(row, col);
+        break;
+      case "isStart":
+        setOtherStartNode(row, col);
+        break;
+      case "isFinish":
+        setOtherEndNode(row, col);
+    }
+  };
+
   const renderStars = () => {
     const nodes = [];
     graphData.forEach((node) => {
@@ -143,9 +177,7 @@ export default function TestGraph() {
           animationDelay={ANIMATION_DELAY}
           nodeData={node}
           onNodeClick={(row, col) => {
-            // setOtherStartNode(row, col);
-            // setOtherEndNode(row, col);
-            setWall(row, col);
+            changeNodeFunction(alterMode, row, col);
           }}
         ></Star>
       );
@@ -153,9 +185,10 @@ export default function TestGraph() {
     return nodes;
   };
   return (
-    <div style={{ background: "#111830" }}>
-      <Grid>{renderStars()}</Grid>
-      <button onClick={dijkstraReWrite}>log graph</button>
+    <div ref={container} style={{ flex: 1 }}>
+      <Grid ref={gridRef}>{renderStars()}</Grid>
     </div>
   );
-}
+});
+
+export default TestGraph;
