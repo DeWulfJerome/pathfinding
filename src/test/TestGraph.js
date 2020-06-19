@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef, ReactDOM } from 'react';
-import { createGraph } from '../dataStructures/graph';
-import styled from 'styled-components';
-import Node from './Node';
-import Dijkstra from '../algorithms/newDijkstra';
-import * as _ from 'lodash';
+import React, { useEffect, useState, useRef, ReactDOM } from "react";
+import { createGraph } from "../dataStructures/graph";
+import styled from "styled-components";
+import Node from "./Node";
+import Dijkstra from "../algorithms/newDijkstra";
+import * as _ from "lodash";
 
 const GRAPH_ROWS = 10;
 const GRAPH_COLS = 10;
@@ -18,8 +18,8 @@ const Grid = styled.div`
 
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
-  const [startNode, setStartNode] = useState('2-2');
-  const [endNode, setEndNode] = useState('10-10');
+  const [startNode, setStartNode] = useState("2-2");
+  const [endNode, setEndNode] = useState("10-10");
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
@@ -39,13 +39,13 @@ export default function TestGraph() {
     });
 
     nodeRefs.current.forEach((node) => {
-      node.classList.remove('visited');
+      node.classList.remove("visited");
     });
     const dijkstra = new Dijkstra(graphData, startNode, endNode);
     const {
       distances,
       previousNodes,
-      visitedNodesInOrder
+      visitedNodesInOrder,
     } = dijkstra.getDistancesAndPreviousNodes();
     if (distances) {
       const shortestPath = dijkstra.findShortestPath(previousNodes);
@@ -57,7 +57,7 @@ export default function TestGraph() {
       const timeOut = endNodeIndex * ANIMATION_DELAY;
       for (let i = 0; i < endNodeIndex; i++) {
         setTimeout(() => {
-          nodeRefs.current.get(visitedNodesInOrder[i]).classList.add('visited');
+          nodeRefs.current.get(visitedNodesInOrder[i]).classList.add("visited");
         }, i * ANIMATION_DELAY);
 
         const visitedNode = newMapGrid.get(visitedNodesInOrder[i]);
@@ -78,7 +78,7 @@ export default function TestGraph() {
         setPrevShortestPath(shortestPath);
       }, timeOut);
     } else {
-      alert('you are stuck');
+      alert("you are stuck");
     }
   };
 
@@ -111,7 +111,7 @@ export default function TestGraph() {
       isWall: false,
       previousNode: null,
       lastCol: false,
-      lastRow: false
+      lastRow: false,
     };
   };
 
@@ -136,11 +136,15 @@ export default function TestGraph() {
   };
 
   const setWall = (row, col) => {
-    const newMapGrid = _.cloneDeep(graphData);
-    const wallNode = newMapGrid.get(`${row}-${col}`);
-    wallNode.isWall = !wallNode.isWall;
-    setgraphData(newMapGrid);
-    console.log(wallNode);
+    const newGraphData = _.cloneDeep(graphData);
+    const newMapGrid = _.cloneDeep(newGrid);
+    const graphWallNode = newGraphData.get(`${row}-${col}`);
+    const gridWallNode = newMapGrid.get(`${row}-${col}`);
+    console.log(gridWallNode);
+    graphWallNode.isWall = !graphWallNode.isWall;
+    gridWallNode.isWall = !gridWallNode.isWall;
+    setgraphData(newGraphData);
+    setNewGrid(newMapGrid);
   };
 
   const renderMapNodes = () => {

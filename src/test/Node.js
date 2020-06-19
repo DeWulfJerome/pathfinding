@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
-import Lottie from 'react-lottie';
-import plant1 from '../assets/plant1.json';
-import plant2 from '../assets/plant2.json';
-import plant3 from '../assets/plant3.json';
+import React, { useState, useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
+import Lottie from "react-lottie";
+import plant1 from "../assets/plant1.json";
+import plant2 from "../assets/plant2.json";
+import plant3 from "../assets/plant3.json";
 
-import './Node.css';
+import "./Node.css";
 
 const FadeIn = keyframes`
   0% {
@@ -34,13 +34,13 @@ const complexFadeAnim = (props) => {
 
 const riseAnim = keyframes`
   0%{
-    box-shadow: inset 0 0 12px 5px rgba(36, 137, 81, 0.12);
+    box-shadow: inset 0 0 12px 5px rgba(36, 137, 81, 0.22);
   }
   50%{
     box-shadow: none;
   }
   100%{
-    box-shadow: 0 0 12px 5px rgba(36, 137, 81, 0.12);
+    box-shadow: 0 0 12px 5px rgba(36, 137, 81, 0.22);
   }
 `;
 
@@ -53,6 +53,27 @@ const complexRiseAnim = (props) => {
   );
 };
 
+const wallAnim = keyframes`
+  0%{
+    box-shadow: none;
+  }
+  100%{
+    box-shadow: inset 0 0 12px 5px rgba(140, 67, 0, 0.32);
+  }
+`;
+
+const complexWallAnim = (props) => {
+  return (
+    props.isWall &&
+    css`
+      animation: ${wallAnim} 0.2s ease-in-out forwards;
+    `
+  );
+};
+// css`
+// animation: ${wallAnim} 0.8s ease-in-out forwards;
+// `
+
 const PlantPot = styled.div`
   position: relative;
   display: flex;
@@ -60,6 +81,7 @@ const PlantPot = styled.div`
   align-items: center;
   margin: 10px;
   border-radius: 10%;
+  ${complexWallAnim}
 ${complexRiseAnim}
   &:before {
     position: absolute;
@@ -101,8 +123,8 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
     autoplay: false,
     animationData: animData,
     rendererSettings: {
-      preserveAspectRation: 'xMidYMid slice'
-    }
+      preserveAspectRation: "xMidYMid slice",
+    },
   };
 
   return (
@@ -112,8 +134,15 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
       isStart={nodeData.isStart}
       isFinish={nodeData.isFinish}
       isVisited={nodeData.isVisited}
-      onClick={() => {
+      isWall={nodeData.isWall}
+      onMouseDown={(e) => {
+        e.preventDefault();
         onNodeClick(nodeData.row, nodeData.col);
+      }}
+      onMouseEnter={(e) => {
+        if (e.buttons === 1) {
+          onNodeClick(nodeData.row, nodeData.col);
+        }
       }}
       style={{ width: plantSize, height: plantSize }}
     >
@@ -126,15 +155,15 @@ export default function Node({ nodeData, parentRef, onNodeClick, plantSize }) {
         isPaused={!nodeData.isPath}
         eventListeners={[
           {
-            eventName: 'complete',
+            eventName: "complete",
             callback: () => {
               if (animData === plant1) {
                 setAnimData(plant2);
               } else {
                 setAnimData(plant3);
               }
-            }
-          }
+            },
+          },
         ]}
       ></Lottie>
     </PlantPot>
