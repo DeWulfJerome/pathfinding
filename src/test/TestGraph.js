@@ -31,11 +31,7 @@ export default function TestGraph() {
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
   }, []);
 
-  useEffect(() => {
-    console.log(graphData);
-  }, [graphData]);
-
-  const dijkstraReWrite = () => {
+  const dijkstraReWrite = async () => {
     const newGraphData = _.cloneDeep(graphData);
     // Reset previous calculations
     newGraphData.forEach((node) => {
@@ -52,9 +48,8 @@ export default function TestGraph() {
     } = dijkstra.getDistancesAndPreviousNodes();
     const shortestPath = dijkstra.findShortestPath(previousNodes);
     // Animate the search
-    animateSearch(visitedNodesInOrder).then(() => {
-      console.log("Finished");
-    });
+    await animateSearch(visitedNodesInOrder);
+    animatePath(shortestPath);
   };
 
   const animateSearch = (visitedNodesInOrder) => {
@@ -75,55 +70,19 @@ export default function TestGraph() {
       }
       setTimeout(() => {
         resolve();
-      }, animationFullDuration);
+      }, animationFullDuration + ANIMATION_DELAY);
     });
   };
 
-  const testDijkstra = () => {
-    const newMapGrid = _.cloneDeep(graphData);
-    prevShortesPath.forEach((node) => {
-      const visitedNode = newMapGrid.get(node);
-      visitedNode.isPath = false;
-      visitedNode.isVisited = false;
-    });
-
-    nodeRefs.current.forEach((node) => {
-      node.classList.remove("visited");
-    });
-    const dijkstra = new Dijkstra(graphData, startNode, endNode);
-    const {
-      distances,
-      previousNodes,
-      visitedNodesInOrder,
-    } = dijkstra.getDistancesAndPreviousNodes();
-    if (distances) {
-      const shortestPath = dijkstra.findShortestPath(previousNodes);
-
-      const endNodeIndex = visitedNodesInOrder.findIndex(
-        (val) => val === endNode
-      );
-
-      const timeOut = endNodeIndex * ANIMATION_DELAY;
-      for (let i = 0; i < endNodeIndex; i++) {
-        setTimeout(() => {
-          nodeRefs.current.get(visitedNodesInOrder[i]).classList.add("visited");
-        }, i * ANIMATION_DELAY);
-
-        if (visitedNodesInOrder[i] === endNode) {
-          break;
-        }
-      }
+  const animatePath = (shortestPath) => {
+    for (let i = 0; i < shortestPath.length; i++) {
       setTimeout(() => {
-        shortestPath.forEach((node) => {
-          const visitedNode = newMapGrid.get(node);
-          visitedNode.isPath = true;
-          visitedNode.isVisited = true;
+        setgraphData((graphData) => {
+          const newGraphData = _.cloneDeep(graphData);
+          newGraphData.get(shortestPath[i]).isPath = true;
+          return newGraphData;
         });
-        setgraphData(newMapGrid);
-        setPrevShortestPath(shortestPath);
-      }, timeOut);
-    } else {
-      alert("you are stuck");
+      }, i * ANIMATION_DELAY);
     }
   };
 
@@ -182,7 +141,8 @@ export default function TestGraph() {
       nodes.push(
         <Star
           key={`${node.row}-${node.col}`}
-          plantsize={PLANT_SIZE}
+          plantSize={PLANT_SIZE}
+          animationDelay={ANIMATION_DELAY}
           nodeData={node}
           onNodeClick={(row, col) => {
             // setOtherStartNode(row, col);
