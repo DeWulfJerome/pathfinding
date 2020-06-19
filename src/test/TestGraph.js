@@ -25,12 +25,9 @@ export default function TestGraph() {
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
-    console.time("create graph");
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
-    console.timeEnd("create graph");
-    console.time("build grid");
+
     buildMapGrid();
-    console.timeEnd("build grid");
   }, []);
 
   const testDijkstra = () => {
@@ -151,7 +148,6 @@ export default function TestGraph() {
   };
 
   const renderMapNodes = () => {
-    console.time("render nodes");
     const nodes = [];
     newGrid.forEach((node) => {
       nodes.push(
@@ -170,7 +166,7 @@ export default function TestGraph() {
         ></Node>
       );
     });
-    console.timeEnd("render nodes");
+
     return nodes;
   };
   return (
