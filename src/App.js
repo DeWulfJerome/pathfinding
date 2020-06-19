@@ -1,12 +1,12 @@
 import React from "react";
 import "./App.css";
-import PathfindingVisualizer from "./pathfinding/PathfindingVisualizer";
 import TestGraph from "./test/TestGraph";
+import ControlsContainer from "./components/controls/ControlsContainer";
 
 function App() {
   return (
     <div className="App">
-      {/* <PathfindingVisualizer></PathfindingVisualizer> */}
+      <ControlsContainer></ControlsContainer>
       <TestGraph></TestGraph>
     </div>
   );

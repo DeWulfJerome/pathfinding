@@ -153,7 +153,7 @@ export default function TestGraph() {
     return nodes;
   };
   return (
-    <div style={{ background: "#111830" }}>
+    <div>
       <Grid>{renderStars()}</Grid>
       <button onClick={dijkstraReWrite}>log graph</button>
     </div>
