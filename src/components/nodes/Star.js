@@ -21,7 +21,6 @@ const pulse = keyframes`
       opacity: .85;
     }
 `;
-// filter: blur(1.3px);
 
 const complexPulse = (props) => {
   return (
