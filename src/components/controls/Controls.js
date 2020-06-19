@@ -25,26 +25,52 @@ const H1 = styled.h1`
 const OrangeText = styled.span`
   color: ${StyleConstants.colors.yellow.medium};
 `;
+
+const RedText = styled.span`
+  color: ${StyleConstants.colors.red.medium};
+`;
 const SubText = styled.p`
   color: ${StyleConstants.colors.blue.font};
   margin: 0;
 `;
 
+const Select = styled.select`
+  background: transparent;
+  color: white;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  border-radius: 40px;
+  padding: 0.7rem 2rem;
+  border: 2px solid ${StyleConstants.colors.blue.light};
+  box-shadow: 0 0 5px 2px ${StyleConstants.colors.blue.shade};
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 15px 2px ${StyleConstants.colors.blue.shade};
+  }
+`;
+
+const Options = styled.option`
+  background: ${StyleConstants.colors.blue.dark};
+`;
+
 export default function Controls({ onChangeAlterMode }) {
   return (
     <ControlsContainer>
-      <div>
-        <select
+      <ContentContainer>
+        <H1>
+          Update your <RedText>settings</RedText>
+        </H1>
+        <Select
           name="alterMode"
           onChange={(e) => {
             onChangeAlterMode(e.target.value);
           }}
         >
-          <option value="isWall">Destroy nodes</option>
-          <option value="isStart">Change StartNode</option>
-          <option value="isFinish">Change FinishNode</option>
-        </select>
-      </div>
+          <Options value="isWall">Destroy nodes</Options>
+          <Options value="isStart">Change StartNode</Options>
+          <Options value="isFinish">Change FinishNode</Options>
+        </Select>
+      </ContentContainer>
       <ContentContainer>
         <H1>
           Check out this <OrangeText>Pathfinding Visualizer!</OrangeText>
