@@ -5,6 +5,7 @@ const StarHolder = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  ${(props) => props.isVisited && "background: green;"}
 `;
 
 const Dot = styled.div`
@@ -19,12 +20,19 @@ const Dot = styled.div`
       ? "#fcff46"
       : "#fff"};
   opacity: ${(props) =>
-    props.isStart || props.isFinish ? "1" : props.isWall ? "0" : "0.34"};
+    props.isStart || props.isFinish || props.isPath
+      ? "1"
+      : props.isWall
+      ? "0"
+      : "0.34"};
   filter: blur(1.3px);
   border-radius: 100%;
 `;
 
 export default function Star({ nodeData, parentRef, onNodeClick, plantSize }) {
+  if (nodeData.isPath) {
+    console.log(nodeData.row, nodeData.col);
+  }
   return (
     <StarHolder
       ref={parentRef}
@@ -38,6 +46,7 @@ export default function Star({ nodeData, parentRef, onNodeClick, plantSize }) {
         }
       }}
       style={{ width: plantSize, height: plantSize }}
+      isVisited={nodeData.isVisited}
     >
       <Dot
         isPath={nodeData.isPath}

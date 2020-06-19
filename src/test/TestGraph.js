@@ -21,20 +21,66 @@ const Grid = styled.div`
 `;
 
 export default function TestGraph() {
-  const [graphData, setgraphData] = useState();
-  const [newGrid, setNewGrid] = useState(new Map());
+  const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState("2-2");
   const [endNode, setEndNode] = useState("7-7");
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
-    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
-    setNewGrid(buildMapGrid(GRAPH_ROWS, GRAPH_COLS));
+    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
   }, []);
 
+  useEffect(() => {
+    console.log(graphData);
+  }, [graphData]);
+
+  const dijkstraReWrite = () => {
+    const newGraphData = _.cloneDeep(graphData);
+    // Reset previous calculations
+    newGraphData.forEach((node) => {
+      node.isPath = false;
+      node.isVisited = false;
+    });
+    setgraphData(newGraphData);
+    // Instantiate Dijkstra
+    const dijkstra = new Dijkstra(newGraphData, startNode, endNode);
+    const {
+      distances,
+      previousNodes,
+      visitedNodesInOrder,
+    } = dijkstra.getDistancesAndPreviousNodes();
+    const shortestPath = dijkstra.findShortestPath(previousNodes);
+    // Animate the search
+    animateSearch(visitedNodesInOrder).then(() => {
+      console.log("Finished");
+    });
+  };
+
+  const animateSearch = (visitedNodesInOrder) => {
+    return new Promise((resolve, reject) => {
+      const endNodeIndex = visitedNodesInOrder.findIndex(
+        (val) => val === endNode
+      );
+      const animationFullDuration = endNodeIndex * ANIMATION_DELAY;
+      // Set each graphNode contained in visitedNodesInOrder to isVisited = true
+      for (let i = 0; i < endNodeIndex; i++) {
+        setTimeout(() => {
+          setgraphData((graphData) => {
+            const newGraphData = _.cloneDeep(graphData);
+            newGraphData.get(visitedNodesInOrder[i]).isVisited = true;
+            return newGraphData;
+          });
+        }, i * ANIMATION_DELAY);
+      }
+      setTimeout(() => {
+        resolve();
+      }, animationFullDuration);
+    });
+  };
+
   const testDijkstra = () => {
-    const newMapGrid = _.cloneDeep(newGrid);
+    const newMapGrid = _.cloneDeep(graphData);
     prevShortesPath.forEach((node) => {
       const visitedNode = newMapGrid.get(node);
       visitedNode.isPath = false;
@@ -73,7 +119,7 @@ export default function TestGraph() {
           visitedNode.isPath = true;
           visitedNode.isVisited = true;
         });
-        setNewGrid(newMapGrid);
+        setgraphData(newMapGrid);
         setPrevShortestPath(shortestPath);
       }, timeOut);
     } else {
@@ -81,73 +127,36 @@ export default function TestGraph() {
     }
   };
 
-  const buildMapGrid = (GRAPH_ROWS, GRAPH_COLS) => {
-    const mapGrid = new Map();
-    for (let row = 0; row < GRAPH_ROWS; row++) {
-      for (let col = 0; col < GRAPH_COLS; col++) {
-        const currentNode = createNode(col + 1, row + 1);
-        if (row === GRAPH_ROWS - 1) {
-          currentNode.lastRow = true;
-        }
-        if (col === GRAPH_COLS - 1) {
-          currentNode.lastCol = true;
-        }
-        mapGrid.set(`${row + 1}-${col + 1}`, currentNode);
-      }
-    }
-    return mapGrid;
-  };
-
-  const createNode = (col, row) => {
-    return {
-      col,
-      row,
-      isStart: startNode === `${row}-${col}` ? true : false,
-      isFinish: endNode === `${row}-${col}` ? true : false,
-      distance: Infinity,
-      isVisited: false,
-      isPath: false,
-      isWall: false,
-      previousNode: null,
-      lastCol: false,
-      lastRow: false,
-    };
-  };
-
   const setOtherStartNode = (row, col) => {
-    const newMapGrid = _.cloneDeep(newGrid);
-    const prevStartNode = newMapGrid.get(startNode);
+    const newGraphData = _.cloneDeep(graphData);
+    const prevStartNode = newGraphData.get(startNode);
     prevStartNode.isStart = false;
-    const newStartNode = newMapGrid.get(`${row}-${col}`);
+    const newStartNode = newGraphData.get(`${row}-${col}`);
     newStartNode.isStart = true;
     setStartNode(`${row}-${col}`);
-    setNewGrid(newMapGrid);
+    setgraphData(newGraphData);
   };
 
   const setOtherEndNode = (row, col) => {
-    const newMapGrid = _.cloneDeep(newGrid);
-    const prevEndNode = newMapGrid.get(endNode);
+    const newGraphData = _.cloneDeep(graphData);
+    const prevEndNode = newGraphData.get(endNode);
     prevEndNode.isFinish = false;
-    const newEndNode = newMapGrid.get(`${row}-${col}`);
+    const newEndNode = newGraphData.get(`${row}-${col}`);
     newEndNode.isFinish = true;
     setEndNode(`${row}-${col}`);
-    setNewGrid(newMapGrid);
+    setgraphData(newGraphData);
   };
 
   const setWall = (row, col) => {
     const newGraphData = _.cloneDeep(graphData);
-    const newMapGrid = _.cloneDeep(newGrid);
     const graphWallNode = newGraphData.get(`${row}-${col}`);
-    const gridWallNode = newMapGrid.get(`${row}-${col}`);
     graphWallNode.isWall = !graphWallNode.isWall;
-    gridWallNode.isWall = !gridWallNode.isWall;
     setgraphData(newGraphData);
-    setNewGrid(newMapGrid);
   };
 
   const renderMapNodes = () => {
     const nodes = [];
-    newGrid.forEach((node) => {
+    graphData.forEach((node) => {
       nodes.push(
         <Node
           key={`${node.row}-${node.col}`}
@@ -169,7 +178,7 @@ export default function TestGraph() {
 
   const renderStars = () => {
     const nodes = [];
-    newGrid.forEach((node) => {
+    graphData.forEach((node) => {
       nodes.push(
         <Star
           key={`${node.row}-${node.col}`}
@@ -191,7 +200,7 @@ export default function TestGraph() {
   return (
     <div style={{ background: "#111830" }}>
       <Grid>{renderStars()}</Grid>
-      <button onClick={testDijkstra}>log graph</button>
+      <button onClick={dijkstraReWrite}>log graph</button>
     </div>
   );
 }
