@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef, ReactDOM } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createGraph } from "../dataStructures/graph";
 import styled from "styled-components";
 import Node from "./Node";
 import Dijkstra from "../algorithms/newDijkstra";
 import * as _ from "lodash";
 
-const GRAPH_ROWS = 10;
-const GRAPH_COLS = 10;
+const GRAPH_ROWS = 8;
+const GRAPH_COLS = 8;
 const PLANT_SIZE = 60;
 const ANIMATION_DELAY = 50;
 
@@ -19,14 +19,18 @@ const Grid = styled.div`
 export default function TestGraph() {
   const [graphData, setgraphData] = useState();
   const [startNode, setStartNode] = useState("2-2");
-  const [endNode, setEndNode] = useState("10-10");
+  const [endNode, setEndNode] = useState("7-7");
   const [newGrid, setNewGrid] = useState(new Map());
   const [prevShortesPath, setPrevShortestPath] = useState([]);
   const nodeRefs = useRef(new Map());
 
   useEffect(() => {
+    console.time("create graph");
     setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS));
+    console.timeEnd("create graph");
+    console.time("build grid");
     buildMapGrid();
+    console.timeEnd("build grid");
   }, []);
 
   const testDijkstra = () => {
@@ -140,7 +144,6 @@ export default function TestGraph() {
     const newMapGrid = _.cloneDeep(newGrid);
     const graphWallNode = newGraphData.get(`${row}-${col}`);
     const gridWallNode = newMapGrid.get(`${row}-${col}`);
-    console.log(gridWallNode);
     graphWallNode.isWall = !graphWallNode.isWall;
     gridWallNode.isWall = !gridWallNode.isWall;
     setgraphData(newGraphData);
@@ -148,6 +151,7 @@ export default function TestGraph() {
   };
 
   const renderMapNodes = () => {
+    console.time("render nodes");
     const nodes = [];
     newGrid.forEach((node) => {
       nodes.push(
@@ -166,6 +170,7 @@ export default function TestGraph() {
         ></Node>
       );
     });
+    console.timeEnd("render nodes");
     return nodes;
   };
   return (
