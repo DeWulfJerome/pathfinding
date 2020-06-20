@@ -3,14 +3,14 @@ import React, {
   useState,
   useRef,
   forwardRef,
-  useImperativeHandle,
-} from "react";
-import { createGraph } from "../dataStructures/graph";
-import styled from "styled-components";
-import Node from "./Node";
-import Dijkstra from "../algorithms/newDijkstra";
-import * as _ from "lodash";
-import Star from "../components/nodes/Star";
+  useImperativeHandle
+} from 'react';
+import { createGraph } from '../dataStructures/graph';
+import styled from 'styled-components';
+import Node from './Node';
+import Dijkstra from '../algorithms/newDijkstra';
+import * as _ from 'lodash';
+import Star from '../components/nodes/Star';
 
 let GRAPH_ROWS = 5;
 let GRAPH_COLS = 10;
@@ -30,12 +30,12 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
       dijkstraReWrite();
-    },
+    }
   }));
 
   const [graphData, setgraphData] = useState(new Map());
-  const [startNode, setStartNode] = useState("2-2");
-  const [endNode, setEndNode] = useState("4-4");
+  const [startNode, setStartNode] = useState('2-2');
+  const [endNode, setEndNode] = useState('4-4');
   const nodeRefs = useRef(new Map());
   const container = useRef();
   const gridRef = useRef();
@@ -64,12 +64,22 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
     const {
       distances,
       previousNodes,
-      visitedNodesInOrder,
+      visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
-    const shortestPath = dijkstra.findShortestPath(previousNodes);
-    // Animate the search
-    await animateSearch(visitedNodesInOrder);
-    animatePath(shortestPath);
+    if (distances) {
+      const shortestPath = dijkstra.findShortestPath(previousNodes);
+      // Animate the search
+      await animateSearch(visitedNodesInOrder);
+      animatePath(shortestPath);
+    } else {
+      const newGraphData = _.cloneDeep(graphData);
+      // Reset previous calculations
+      newGraphData.forEach((node) => {
+        node.isWall = false;
+      });
+      setgraphData(newGraphData);
+      alert('End node is unreachable!');
+    }
   };
 
   const animateSearch = (visitedNodesInOrder) => {
@@ -128,7 +138,9 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
   const setWall = (row, col) => {
     const newGraphData = _.cloneDeep(graphData);
     const graphWallNode = newGraphData.get(`${row}-${col}`);
-    graphWallNode.isWall = !graphWallNode.isWall;
+    if (`${row}-${col}` !== startNode && `${row}-${col}` !== endNode) {
+      graphWallNode.isWall = !graphWallNode.isWall;
+    }
     setgraphData(newGraphData);
   };
 
@@ -141,8 +153,6 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
           plantsize={PLANT_SIZE}
           nodeData={node}
           onNodeClick={(row, col) => {
-            // setOtherStartNode(row, col);
-            // setOtherEndNode(row, col);
             setWall(row, col);
           }}
           parentRef={(el) =>
@@ -156,13 +166,13 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
 
   const changeNodeFunction = (alterMode, row, col) => {
     switch (alterMode) {
-      case "isWall":
+      case 'isWall':
         setWall(row, col);
         break;
-      case "isStart":
+      case 'isStart':
         setOtherStartNode(row, col);
         break;
-      case "isFinish":
+      case 'isFinish':
         setOtherEndNode(row, col);
     }
   };

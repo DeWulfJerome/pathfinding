@@ -23,6 +23,7 @@ export default class Dijkstra {
         unvisitedNodes.delete(currentNode[0]);
         continue;
       }
+
       // If no nodes with distance smaller than infinity can be found, we must be stuck.
       if (currentNode[1].distance === Infinity) {
         return false;
