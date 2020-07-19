@@ -41,15 +41,14 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
   const gridRef = useRef();
 
   useEffect(() => {
-    // const containerWidth = container.current.offsetWidth;
-    // const containerHeight = container.current.offsetHeight;
-    // const newColCount = Math.floor(containerWidth / PLANT_SIZE);
-    // const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
-    // gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
-    // gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
-    // gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
-    // setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
-    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
+    const containerWidth = container.current.offsetWidth;
+    const containerHeight = container.current.offsetHeight;
+    const newColCount = Math.floor(containerWidth / PLANT_SIZE);
+    const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
+    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
+    gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
+    setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
 
   const dijkstraReWrite = async () => {
