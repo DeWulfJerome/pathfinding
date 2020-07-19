@@ -12,8 +12,8 @@ import Dijkstra from '../algorithms/newDijkstra';
 import * as _ from 'lodash';
 import Star from '../components/nodes/Star';
 
-let GRAPH_ROWS = 5;
-let GRAPH_COLS = 10;
+let GRAPH_ROWS = 4;
+let GRAPH_COLS = 4;
 const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
@@ -66,7 +66,7 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
       previousNodes,
       visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
-    if (distances) {
+    if (previousNodes.get(endNode)) {
       const shortestPath = dijkstra.findShortestPath(previousNodes);
       // Animate the search
       await animateSearch(visitedNodesInOrder);
