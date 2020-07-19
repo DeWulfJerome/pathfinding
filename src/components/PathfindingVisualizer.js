@@ -7,13 +7,12 @@ import React, {
 } from 'react';
 import { createGraph } from '../dataStructures/graph';
 import styled from 'styled-components';
-import Node from './Node';
-import Dijkstra from '../algorithms/newDijkstra';
+import Dijkstra from '../algorithms/dijkstra';
 import * as _ from 'lodash';
-import Star from '../components/nodes/Star';
+import Star from './nodes/Star';
 
-let GRAPH_ROWS = 4;
-let GRAPH_COLS = 4;
+let GRAPH_ROWS = 6;
+let GRAPH_COLS = 6;
 const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
@@ -26,17 +25,16 @@ const Grid = styled.div`
   width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-const TestGraph = forwardRef(({ alterMode }, ref) => {
+const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
-      dijkstraReWrite();
+      runDijkstra();
     }
   }));
 
   const [graphData, setgraphData] = useState(new Map());
   const [startNode, setStartNode] = useState('2-2');
   const [endNode, setEndNode] = useState('4-4');
-  const nodeRefs = useRef(new Map());
   const container = useRef();
   const gridRef = useRef();
 
@@ -51,7 +49,7 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
     setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
 
-  const dijkstraReWrite = async () => {
+  const runDijkstra = async () => {
     const newGraphData = _.cloneDeep(graphData);
     // Reset previous calculations
     newGraphData.forEach((node) => {
@@ -62,7 +60,6 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
     // Instantiate Dijkstra
     const dijkstra = new Dijkstra(newGraphData, startNode, endNode);
     const {
-      distances,
       previousNodes,
       visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
@@ -144,26 +141,6 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
     setgraphData(newGraphData);
   };
 
-  const renderMapNodes = () => {
-    const nodes = [];
-    graphData.forEach((node) => {
-      nodes.push(
-        <Node
-          key={`${node.row}-${node.col}`}
-          plantsize={PLANT_SIZE}
-          nodeData={node}
-          onNodeClick={(row, col) => {
-            setWall(row, col);
-          }}
-          parentRef={(el) =>
-            nodeRefs.current.set(`${node.row}-${node.col}`, el)
-          }
-        ></Node>
-      );
-    });
-    return nodes;
-  };
-
   const changeNodeFunction = (alterMode, row, col) => {
     switch (alterMode) {
       case 'isWall':
@@ -174,6 +151,9 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
         break;
       case 'isFinish':
         setOtherEndNode(row, col);
+        break;
+      default:
+        setWall(row, col);
     }
   };
 
@@ -201,4 +181,4 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
   );
 });
 
-export default TestGraph;
+export default PathfindingVisualizer;

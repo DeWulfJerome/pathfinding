@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import styled, { keyframes, css } from "styled-components";
+import React from 'react';
+import styled, { keyframes, css } from 'styled-components';
 
 const StarHolder = styled.div`
   display: flex;
@@ -36,24 +36,24 @@ const complexPulse = (props) => {
 
 const Dot = styled.div`
   height: ${(props) =>
-    props.isStart || props.isFinish || props.isPath ? "8px" : "3px"};
+    props.isStart || props.isFinish || props.isPath ? '8px' : '3px'};
   width: ${(props) =>
-    props.isStart || props.isFinish || props.isPath ? "8px" : "3px"};
+    props.isStart || props.isFinish || props.isPath ? '8px' : '3px'};
   transition: all 0.3s ease;
   background: ${(props) =>
     props.isStart
-      ? "#00fff3"
+      ? '#00fff3'
       : props.isFinish
-      ? "#ff2f00"
+      ? '#ff2f00'
       : props.isPath
-      ? "#46ff6e"
-      : "#fff"};
+      ? '#46ff6e'
+      : '#fff'};
   opacity: ${(props) =>
     props.isStart || props.isFinish || props.isPath
-      ? "1"
+      ? '1'
       : props.isWall
-      ? "0"
-      : "0.25"};
+      ? '0'
+      : '0.25'};
   filter: blur(1.3px);
   border-radius: 100%;
   ${complexPulse}
@@ -63,7 +63,7 @@ export default function Star({
   nodeData,
   onNodeClick,
   animationDelay,
-  plantSize,
+  plantSize
 }) {
   return (
     <StarHolder
@@ -84,7 +84,6 @@ export default function Star({
         isStart={nodeData.isStart}
         isFinish={nodeData.isFinish}
         animationDelay={animationDelay}
-        isPath={nodeData.isPath}
         isVisited={nodeData.isVisited}
         isWall={nodeData.isWall}
       ></Dot>

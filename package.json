@@ -9,7 +9,6 @@
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-lottie": "^1.2.3",
     "react-scripts": "3.4.1",
     "styled-components": "^5.1.0"
   },
