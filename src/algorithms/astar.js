@@ -2,6 +2,8 @@ import {
   diagonalEdgeDistance,
   horvertEdgeDistance
 } from '../dataStructures/graph';
+import * as _ from 'lodash';
+
 export default class Astar {
   constructor(graph, startNode, finishNode) {
     this.graph = graph;
@@ -9,7 +11,19 @@ export default class Astar {
     this.finishNode = finishNode;
   }
 
-  calculateHeuristicDistances(fromNode) {
+  getPreviousNodesAndVisitedNodesInOrder() {
+    const unvisitedNodes = _.cloneDeep(this.graph);
+    // Set dinstance heuristic on all nodes
+    for (const [key, value] of unvisitedNodes.entries()) {
+      const node = value;
+      node.distanceHeuristic = this.calculateDistanceHeuristic(key);
+      unvisitedNodes.set(key, node);
+    }
+    console.log(unvisitedNodes);
+    return { previousNodes: 'test', visitedNodesInOrder: 'test' };
+  }
+
+  calculateDistanceHeuristic(fromNode) {
     const fromCoordNumbers = fromNode.split('-').map((str) => parseInt(str));
     const toCoordNumbers = this.finishNode
       .split('-')
@@ -53,6 +67,6 @@ export default class Astar {
         totalDistance = totalDistance + horvertEdgeDistance;
       }
     }
-    console.log(totalDistance);
+    return totalDistance;
   }
 }

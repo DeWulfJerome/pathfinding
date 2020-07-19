@@ -60,7 +60,10 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
     setgraphData(newGraphData);
 
     const astar = new Astar(newGraphData, startNode, endNode);
-    astar.calculateHeuristicDistances('1-2');
+    const {
+      previousNodes,
+      visitedNodesInOrder
+    } = astar.getPreviousNodesAndVisitedNodesInOrder();
   };
 
   const runDijkstra = async () => {
