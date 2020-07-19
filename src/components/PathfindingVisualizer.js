@@ -26,11 +26,10 @@ const Grid = styled.div`
   width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
+const PathfindingVisualizer = forwardRef(({ alterMode, algo }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
-      // runDijkstra();
-      runAstar();
+      runAlgorithm();
     }
   }));
 
@@ -50,6 +49,19 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
     gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
     setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
+
+  const runAlgorithm = () => {
+    switch (algo) {
+      case 'dijkstra':
+        runDijkstra();
+        break;
+      case 'astar':
+        runAstar();
+        break;
+      default:
+        runDijkstra();
+    }
+  };
 
   const runAstar = async () => {
     const newGraphData = _.cloneDeep(graphData);

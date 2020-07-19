@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import Controls from "./Controls";
-import Legend from "./Legend";
-import StyleConstants from "../../StyleConstants";
+import React from 'react';
+import styled from 'styled-components';
+import Controls from './Controls';
+import Legend from './Legend';
+import StyleConstants from '../../StyleConstants';
 
 const StyledControlsContainer = styled.div`
   background-color: ${StyleConstants.colors.blue.medium};
@@ -37,15 +37,22 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-export default function ControlsContainer({ visualize, onChangeAlterMode }) {
+export default function ControlsContainer({
+  visualize,
+  onChangeAlterMode,
+  onChangeAlgo
+}) {
   return (
     <StyledControlsContainer>
-      <Controls onChangeAlterMode={onChangeAlterMode}></Controls>
+      <Controls
+        onChangeAlterMode={onChangeAlterMode}
+        onChangeAlgo={onChangeAlgo}
+      ></Controls>
       <Legend></Legend>
       <ButtonContainer>
         <Button
           onClick={() => {
-            visualize("dijkstra");
+            visualize('dijkstra');
           }}
         >
           Visualize!

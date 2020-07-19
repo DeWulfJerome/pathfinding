@@ -13,21 +13,27 @@ const AppContainer = styled.div`
 function App() {
   const visualizer = useRef();
   const [alterMode, setAlterMode] = useState('isWall');
+  const [algo, setAlgo] = useState('dijkstra');
   const visualize = (algoType) => {
     visualizer.current.visualizeAlgo();
   };
   const onChangeAlterMode = (mode) => {
     setAlterMode(mode);
   };
+  const onChangeAlgo = (newAlgo) => {
+    setAlgo(newAlgo);
+  };
   return (
     <AppContainer>
       <ControlsContainer
         visualize={visualize}
         onChangeAlterMode={onChangeAlterMode}
+        onChangeAlgo={onChangeAlgo}
       ></ControlsContainer>
       <PathfindingVisualizer
         ref={visualizer}
         alterMode={alterMode}
+        algo={algo}
       ></PathfindingVisualizer>
     </AppContainer>
   );

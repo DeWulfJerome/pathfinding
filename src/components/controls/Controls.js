@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import StyleConstants from "../../StyleConstants";
+import React from 'react';
+import styled from 'styled-components';
+import StyleConstants from '../../StyleConstants';
 
 const ContentContainer = styled.div`
   background-color: ${StyleConstants.colors.blue.dark};
@@ -41,6 +41,7 @@ const Select = styled.select`
   background: transparent;
   color: white;
   margin-top: 0.5rem;
+  margin-right: 0.5rem;
   font-weight: 600;
   border-radius: 40px;
   padding: 0.7rem 2rem;
@@ -56,7 +57,7 @@ const Options = styled.option`
   background: ${StyleConstants.colors.blue.dark};
 `;
 
-export default function Controls({ onChangeAlterMode }) {
+export default function Controls({ onChangeAlterMode, onChangeAlgo }) {
   return (
     <ControlsContainer>
       <ContentContainer>
@@ -78,6 +79,15 @@ export default function Controls({ onChangeAlterMode }) {
           <Options value="isWall">Destroy nodes</Options>
           <Options value="isStart">Change StartNode</Options>
           <Options value="isFinish">Change FinishNode</Options>
+        </Select>
+        <Select
+          name="alterAlgo"
+          onChange={(e) => {
+            onChangeAlgo(e.target.value);
+          }}
+        >
+          <Options value="dijkstra">Dijkstra</Options>
+          <Options value="astar">A*</Options>
         </Select>
       </ContentContainer>
     </ControlsContainer>
