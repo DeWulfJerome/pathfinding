@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
-import "./App.css";
-import styled from "styled-components";
-import TestGraph from "./test/TestGraph";
-import ControlsContainer from "./components/controls/ControlsContainer";
+import React, { useRef, useState } from 'react';
+import './App.css';
+import styled from 'styled-components';
+import PathfindingVisualizer from './test/PathfindingVisualizer';
+import ControlsContainer from './components/controls/ControlsContainer';
 
 const AppContainer = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ const AppContainer = styled.div`
 
 function App() {
   const visualizer = useRef();
-  const [alterMode, setAlterMode] = useState("isWall");
+  const [alterMode, setAlterMode] = useState('isWall');
   const visualize = (algoType) => {
     visualizer.current.visualizeAlgo();
   };
@@ -25,7 +25,10 @@ function App() {
         visualize={visualize}
         onChangeAlterMode={onChangeAlterMode}
       ></ControlsContainer>
-      <TestGraph ref={visualizer} alterMode={alterMode}></TestGraph>
+      <PathfindingVisualizer
+        ref={visualizer}
+        alterMode={alterMode}
+      ></PathfindingVisualizer>
     </AppContainer>
   );
 }

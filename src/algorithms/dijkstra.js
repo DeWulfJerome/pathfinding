@@ -1,64 +1,98 @@
-export const dijkstra = (grid, startNode, finishNode) => {
-  const visitedNodesInOrder = [];
-  startNode.distance = 0;
-  const unvisitedNodes = getAllNodes(grid);
+import * as _ from 'lodash';
 
-  // Does not need to be cast?
-  while (!!unvisitedNodes.length) {
-    sortNodesByDistance(unvisitedNodes);
-    const closestNode = unvisitedNodes.shift();
-    //If we encounter a wall, we skip it
-    if (closestNode.isWall) continue;
-    // If the closest node is at a distance of infinity,
-    // we must be trapped and should therefor stop.
-    if (closestNode.distance === Infinity) return visitedNodesInOrder;
-    closestNode.isVisited = true;
-    visitedNodesInOrder.push(closestNode);
-    if (closestNode === finishNode) return visitedNodesInOrder;
-    updateUnvisitedNeighbors(closestNode, grid);
+export default class Dijkstra {
+  constructor(graph, startNode, finishNode) {
+    this.graph = graph;
+    this.startNode = startNode;
+    this.finishNode = finishNode;
   }
-};
 
-const sortNodesByDistance = (unvisitedNodes) => {
-  unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
-};
+  getDistancesAndPreviousNodes() {
+    const unvisitedNodes = _.cloneDeep(this.graph);
+    // Set the starting node distance to 0.
+    const startNode = unvisitedNodes.get(this.startNode);
+    startNode.distance = 0;
+    const previousNodes = new Map();
+    const distanceToNodes = new Map();
+    const visitedNodesInOrder = [];
+    while (unvisitedNodes.size) {
+      // Visit the node with the smallest known distance from the start node
+      const currentNode = this.getClosestNode(unvisitedNodes);
+      // If the distance to the closest node is still Infinity
+      // all remaining nodes are unreachable and we should stop the loop.
+      if (currentNode[1].distance === Infinity) {
+        // Clear all remaining unvisitedNodes.
+        unvisitedNodes.clear();
+        break;
+      }
+      // Skip node if its a wall
+      if (currentNode[1].isWall) {
+        unvisitedNodes.delete(currentNode[0]);
+        continue;
+      }
 
-const updateUnvisitedNeighbors = (node, grid) => {
-  const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
-  for (const neighbor of unvisitedNeighbors) {
-    neighbor.distance = node.distance + 1;
-    neighbor.previousNode = node;
-  }
-};
-
-const getUnvisitedNeighbors = (node, grid) => {
-  const neighbors = [];
-  const { col, row } = node;
-  if (row > 0) neighbors.push(grid[row - 1][col]);
-  if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
-  if (col > 0) neighbors.push(grid[row][col - 1]);
-  if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-  return neighbors.filter((neighbor) => !neighbor.isVisited);
-};
-
-const getAllNodes = (grid) => {
-  const nodes = [];
-  for (const row of grid) {
-    for (const node of row) {
-      nodes.push(node);
+      // If no nodes with distance smaller than infinity can be found, we must be stuck.
+      if (currentNode[1].distance === Infinity) {
+        return false;
+      }
+      // For this node, check its unvisited neighbours
+      currentNode[1].neighbours.forEach((neighbour) => {
+        // For this node, calculate distance of each neighbour from the start node
+        if (unvisitedNodes.has(neighbour.name)) {
+          const tempNode = unvisitedNodes.get(neighbour.name);
+          if (distanceToNodes.has(currentNode[0])) {
+            tempNode.distance =
+              distanceToNodes.get(currentNode[0]) +
+              neighbour.distanceToNeighbour;
+          } else {
+            // Is startnode
+            tempNode.distance = neighbour.distanceToNeighbour;
+          }
+          unvisitedNodes.get(neighbour.name);
+          if (distanceToNodes.has(neighbour.name)) {
+            if (distanceToNodes.get(neighbour.name) > tempNode.distance) {
+              // If the calc distance is less than the known distance, update the shortest path
+              distanceToNodes.set(neighbour.name, tempNode.distance);
+              // Update the previous node for each of the updated distances
+              previousNodes.set(neighbour.name, currentNode[0]);
+            } else {
+              // Reset the distance in the unvisited node to the closest known distance
+              tempNode.distance = distanceToNodes.get(neighbour.name);
+            }
+          } else {
+            distanceToNodes.set(neighbour.name, tempNode.distance);
+            // Update the previous node for each of the updated distances
+            previousNodes.set(neighbour.name, currentNode[0]);
+          }
+        }
+      });
+      // Push the current node name into visitedNodesInOrder to be able to show the algorithm working
+      visitedNodesInOrder.push(currentNode[0]);
+      // Add the current node to the list of visited nodes / remove from unvisited nodes
+      unvisitedNodes.delete(currentNode[0]);
     }
+    return {
+      previousNodes,
+      visitedNodesInOrder
+    };
   }
 
-  return nodes;
-};
-
-export const getNodesInShortestPathOrder = (finishNode) => {
-  const nodesInShortestPathOrder = [];
-  let currentNode = finishNode;
-  while (currentNode !== null) {
-    nodesInShortestPathOrder.unshift(currentNode);
-    currentNode = currentNode.previousNode;
+  getClosestNode(unvisitedNodes) {
+    return [...unvisitedNodes.entries()]
+      .sort((a, b) => a[1].distance - b[1].distance)
+      .shift();
   }
 
-  return nodesInShortestPathOrder;
-};
+  findShortestPath(previousNodes) {
+    const nodesInReverseOrder = [this.finishNode];
+    let lookupNode = this.finishNode;
+    while (true) {
+      nodesInReverseOrder.push(previousNodes.get(lookupNode));
+      lookupNode = previousNodes.get(lookupNode);
+      if (lookupNode === this.startNode) {
+        break;
+      }
+    }
+    return nodesInReverseOrder.reverse();
+  }
+}
