@@ -1,5 +1,5 @@
-const horvertEdgeDistance = 1;
-const diagonalEdgeDistance = Math.sqrt(
+export const horvertEdgeDistance = 1;
+export const diagonalEdgeDistance = Math.sqrt(
   horvertEdgeDistance * horvertEdgeDistance +
     horvertEdgeDistance * horvertEdgeDistance
 );
@@ -73,7 +73,7 @@ const addLinkedCenterNodes = (i, j, graph, startNode, endNode) => {
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -83,7 +83,7 @@ const addLinkedCenterNodes = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -94,7 +94,7 @@ const addLinkedFirstColNodes = (i, j, graph, startNode, endNode) => {
       { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -104,7 +104,7 @@ const addLinkedFirstColNodes = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -115,7 +115,7 @@ const addLinkedLastColNodes = (i, j, graph, startNode, endNode) => {
       { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
-      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -125,7 +125,7 @@ const addLinkedLastColNodes = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -136,7 +136,7 @@ const addLinkedFirstRowNodes = (i, j, graph, startNode, endNode) => {
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -146,7 +146,7 @@ const addLinkedFirstRowNodes = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -155,7 +155,7 @@ const addLinkedFirstRowFirstColNode = (i, j, graph, startNode, endNode) => {
     neighbours: new Set([
       { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
+      { name: `${i + 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -165,7 +165,7 @@ const addLinkedFirstRowFirstColNode = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -174,7 +174,7 @@ const addLinkedFirstRowLastColNode = (i, j, graph, startNode, endNode) => {
     neighbours: new Set([
       { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i + 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
-      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i + 1}-${j}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -184,7 +184,7 @@ const addLinkedFirstRowLastColNode = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -195,7 +195,7 @@ const addLinkedLastRowNodes = (i, j, graph, startNode, endNode) => {
       { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -205,7 +205,7 @@ const addLinkedLastRowNodes = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -214,7 +214,7 @@ const addLinkedLastRowFirstColNode = (i, j, graph, startNode, endNode) => {
     neighbours: new Set([
       { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
       { name: `${i - 1}-${j + 1}`, distanceToNeighbour: diagonalEdgeDistance },
-      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j + 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -224,7 +224,7 @@ const addLinkedLastRowFirstColNode = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };
 
@@ -233,7 +233,7 @@ const addLinkedLastRowLastColNode = (i, j, graph, startNode, endNode) => {
     neighbours: new Set([
       { name: `${i - 1}-${j - 1}`, distanceToNeighbour: diagonalEdgeDistance },
       { name: `${i - 1}-${j}`, distanceToNeighbour: horvertEdgeDistance },
-      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance },
+      { name: `${i}-${j - 1}`, distanceToNeighbour: horvertEdgeDistance }
     ]),
     distance: Infinity,
     isWall: false,
@@ -243,6 +243,6 @@ const addLinkedLastRowLastColNode = (i, j, graph, startNode, endNode) => {
     isStart: startNode === `${i}-${j}` ? true : false,
     isPath: false,
     isVisited: false,
-    previousNode: null,
+    previousNode: null
   });
 };

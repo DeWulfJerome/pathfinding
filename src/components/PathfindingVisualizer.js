@@ -8,6 +8,7 @@ import React, {
 import { createGraph } from '../dataStructures/graph';
 import styled from 'styled-components';
 import Dijkstra from '../algorithms/dijkstra';
+import Astar from '../algorithms/astar';
 import * as _ from 'lodash';
 import Star from './nodes/Star';
 
@@ -25,16 +26,16 @@ const Grid = styled.div`
   width: ${GRAPH_COLS * PLANT_SIZE}px;
 `;
 
-const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
+const PathfindingVisualizer = forwardRef(({ alterMode, algo }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
-      runDijkstra();
+      runAlgorithm();
     }
   }));
 
   const [graphData, setgraphData] = useState(new Map());
-  const [startNode, setStartNode] = useState('2-2');
-  const [endNode, setEndNode] = useState('4-4');
+  const [startNode, setStartNode] = useState('1-2');
+  const [endNode, setEndNode] = useState('5-4');
   const container = useRef();
   const gridRef = useRef();
 
@@ -48,6 +49,49 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
     gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
     setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
+
+  const runAlgorithm = () => {
+    switch (algo) {
+      case 'dijkstra':
+        runDijkstra();
+        break;
+      case 'astar':
+        runAstar();
+        break;
+      default:
+        runDijkstra();
+    }
+  };
+
+  const runAstar = async () => {
+    const newGraphData = _.cloneDeep(graphData);
+    newGraphData.forEach((node) => {
+      node.isPath = false;
+      node.isVisited = false;
+    });
+    setgraphData(newGraphData);
+
+    const astar = new Astar(newGraphData, startNode, endNode);
+    const {
+      previousNodes,
+      visitedNodesInOrder
+    } = astar.getPreviousNodesAndVisitedNodesInOrder();
+
+    if (previousNodes.get(endNode)) {
+      const shortestPath = astar.findShortestPath(previousNodes);
+      // Animate the search
+      await animateSearch(visitedNodesInOrder);
+      animatePath(shortestPath);
+    } else {
+      const newGraphData = _.cloneDeep(graphData);
+      // Reset previous calculations
+      newGraphData.forEach((node) => {
+        node.isWall = false;
+      });
+      setgraphData(newGraphData);
+      alert('End node is unreachable!');
+    }
+  };
 
   const runDijkstra = async () => {
     const newGraphData = _.cloneDeep(graphData);
