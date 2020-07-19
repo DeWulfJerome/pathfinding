@@ -51,7 +51,7 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
     setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
 
-  const runAstar = () => {
+  const runAstar = async () => {
     const newGraphData = _.cloneDeep(graphData);
     newGraphData.forEach((node) => {
       node.isPath = false;
@@ -64,6 +64,21 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
       previousNodes,
       visitedNodesInOrder
     } = astar.getPreviousNodesAndVisitedNodesInOrder();
+
+    if (previousNodes.get(endNode)) {
+      const shortestPath = astar.findShortestPath(previousNodes);
+      // Animate the search
+      await animateSearch(visitedNodesInOrder);
+      animatePath(shortestPath);
+    } else {
+      const newGraphData = _.cloneDeep(graphData);
+      // Reset previous calculations
+      newGraphData.forEach((node) => {
+        node.isWall = false;
+      });
+      setgraphData(newGraphData);
+      alert('End node is unreachable!');
+    }
   };
 
   const runDijkstra = async () => {
