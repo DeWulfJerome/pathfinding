@@ -8,6 +8,7 @@ import React, {
 import { createGraph } from '../dataStructures/graph';
 import styled from 'styled-components';
 import Dijkstra from '../algorithms/dijkstra';
+import Astar from '../algorithms/astar';
 import * as _ from 'lodash';
 import Star from './nodes/Star';
 
@@ -28,13 +29,14 @@ const Grid = styled.div`
 const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
   useImperativeHandle(ref, () => ({
     visualizeAlgo() {
-      runDijkstra();
+      // runDijkstra();
+      runAstar();
     }
   }));
 
   const [graphData, setgraphData] = useState(new Map());
-  const [startNode, setStartNode] = useState('2-2');
-  const [endNode, setEndNode] = useState('4-4');
+  const [startNode, setStartNode] = useState('1-2');
+  const [endNode, setEndNode] = useState('5-4');
   const container = useRef();
   const gridRef = useRef();
 
@@ -48,6 +50,18 @@ const PathfindingVisualizer = forwardRef(({ alterMode }, ref) => {
     gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
     setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
   }, []);
+
+  const runAstar = () => {
+    const newGraphData = _.cloneDeep(graphData);
+    newGraphData.forEach((node) => {
+      node.isPath = false;
+      node.isVisited = false;
+    });
+    setgraphData(newGraphData);
+
+    const astar = new Astar(newGraphData, startNode, endNode);
+    astar.calculateHeuristicDistances('1-2');
+  };
 
   const runDijkstra = async () => {
     const newGraphData = _.cloneDeep(graphData);
