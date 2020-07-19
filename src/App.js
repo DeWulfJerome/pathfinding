@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import './App.css';
 import styled from 'styled-components';
-import PathfindingVisualizer from './test/PathfindingVisualizer';
+import PathfindingVisualizer from './components/PathfindingVisualizer';
 import ControlsContainer from './components/controls/ControlsContainer';
 
 const AppContainer = styled.div`

@@ -9,10 +9,10 @@ import { createGraph } from '../dataStructures/graph';
 import styled from 'styled-components';
 import Dijkstra from '../algorithms/dijkstra';
 import * as _ from 'lodash';
-import Star from '../components/nodes/Star';
+import Star from './nodes/Star';
 
-let GRAPH_ROWS = 4;
-let GRAPH_COLS = 4;
+let GRAPH_ROWS = 6;
+let GRAPH_COLS = 6;
 const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
