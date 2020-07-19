@@ -12,8 +12,8 @@ import Dijkstra from '../algorithms/newDijkstra';
 import * as _ from 'lodash';
 import Star from '../components/nodes/Star';
 
-let GRAPH_ROWS = 5;
-let GRAPH_COLS = 10;
+let GRAPH_ROWS = 4;
+let GRAPH_COLS = 4;
 const PLANT_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
@@ -41,14 +41,15 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
   const gridRef = useRef();
 
   useEffect(() => {
-    const containerWidth = container.current.offsetWidth;
-    const containerHeight = container.current.offsetHeight;
-    const newColCount = Math.floor(containerWidth / PLANT_SIZE);
-    const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
-    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
-    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
-    gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
-    setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
+    // const containerWidth = container.current.offsetWidth;
+    // const containerHeight = container.current.offsetHeight;
+    // const newColCount = Math.floor(containerWidth / PLANT_SIZE);
+    // const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
+    // gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
+    // gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
+    // gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
+    // setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
+    setgraphData(createGraph(GRAPH_ROWS, GRAPH_COLS, startNode, endNode));
   }, []);
 
   const dijkstraReWrite = async () => {
@@ -66,7 +67,7 @@ const TestGraph = forwardRef(({ alterMode }, ref) => {
       previousNodes,
       visitedNodesInOrder
     } = dijkstra.getDistancesAndPreviousNodes();
-    if (distances) {
+    if (previousNodes.get(endNode)) {
       const shortestPath = dijkstra.findShortestPath(previousNodes);
       // Animate the search
       await animateSearch(visitedNodesInOrder);
