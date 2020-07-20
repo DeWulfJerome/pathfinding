@@ -7,7 +7,7 @@ import StyleConstants from '../../StyleConstants';
 const StyledControlsContainer = styled.div`
   background-color: ${StyleConstants.colors.blue.medium};
   padding: 1rem;
-  border-bottom-left-radius: 40px;
+  border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
 `;
 

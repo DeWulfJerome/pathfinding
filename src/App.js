@@ -3,6 +3,7 @@ import './App.css';
 import styled from 'styled-components';
 import PathfindingVisualizer from './components/PathfindingVisualizer';
 import ControlsContainer from './components/controls/ControlsContainer';
+import Menu from './components/menu/Menu';
 
 const AppContainer = styled.div`
   display: flex;
@@ -25,11 +26,13 @@ function App() {
   };
   return (
     <AppContainer>
-      <ControlsContainer
-        visualize={visualize}
-        onChangeAlterMode={onChangeAlterMode}
-        onChangeAlgo={onChangeAlgo}
-      ></ControlsContainer>
+      <Menu>
+        <ControlsContainer
+          visualize={visualize}
+          onChangeAlterMode={onChangeAlterMode}
+          onChangeAlgo={onChangeAlgo}
+        ></ControlsContainer>
+      </Menu>
       <PathfindingVisualizer
         ref={visualizer}
         alterMode={alterMode}
