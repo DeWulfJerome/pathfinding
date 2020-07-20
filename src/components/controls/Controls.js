@@ -2,20 +2,21 @@ import React from 'react';
 import styled from 'styled-components';
 import StyleConstants from '../../StyleConstants';
 
-const ContentContainer = styled.div`
-  background-color: ${StyleConstants.colors.blue.dark};
-  padding: 1rem 2rem;
-  border-radius: 40px;
-`;
-
 const ControlsContainer = styled.div`
   display: grid;
   grid-template-columns: 3fr 4fr;
   align-items: center;
   grid-gap: 1rem;
+  max-width: 1000px;
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
+`;
+
+const ContentContainer = styled.div`
+  background-color: ${StyleConstants.colors.blue.dark};
+  padding: 1rem 2rem;
+  border-radius: 40px;
 `;
 
 const H1 = styled.h1`
@@ -35,6 +36,10 @@ const RedText = styled.span`
 const SubText = styled.p`
   color: ${StyleConstants.colors.blue.font};
   margin: 0;
+`;
+
+const WhiteText = styled.p`
+  color: #fff;
 `;
 
 const Select = styled.select`
@@ -62,14 +67,28 @@ export default function Controls({ onChangeAlterMode, onChangeAlgo }) {
     <ControlsContainer>
       <ContentContainer>
         <H1>
-          Check out this <OrangeText>Pathfinding Visualizer!</OrangeText>
+          Welcome to my <OrangeText>Pathfinding Visualizer!</OrangeText>
         </H1>
         <SubText>Created by Jerome De Wulf</SubText>
+        <WhiteText>
+          I built this application to get a better understanding of the most
+          common pathfinding algorithms. Being a visual learner, this seemed to
+          be the best way to really understand what is going on. I'll be adding
+          more algorithms and improving the controls in the future, so please
+          check back to follow my progress.
+        </WhiteText>
+        <WhiteText>
+          You can switch algorithms and alter what clicking a node does in the
+          settings box.
+        </WhiteText>
       </ContentContainer>
       <ContentContainer>
         <H1>
           Update your <RedText>settings</RedText>
         </H1>
+        <WhiteText>
+          Change the start and endNodes, remove nodes or change the algorithm.
+        </WhiteText>
         <Select
           name="alterMode"
           onChange={(e) => {
