@@ -28,15 +28,15 @@ const CrossStripe = styled(Stripe)`
   position: absolute;
 `;
 
-export default function Hamburger({ open, onOpenClick }) {
+export default function Hamburger({ open }) {
   return !open ? (
-    <HamburgerContainer onClick={onOpenClick}>
+    <HamburgerContainer>
       <Stripe></Stripe>
       <Stripe></Stripe>
       <Stripe></Stripe>
     </HamburgerContainer>
   ) : (
-    <CrossContainer onClick={onOpenClick}>
+    <CrossContainer>
       <CrossStripe isFirst></CrossStripe>
       <CrossStripe isFirst={false}></CrossStripe>
     </CrossContainer>

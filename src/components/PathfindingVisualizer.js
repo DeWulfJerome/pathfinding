@@ -14,16 +14,16 @@ import Star from './nodes/Star';
 
 let GRAPH_ROWS = 6;
 let GRAPH_COLS = 6;
-const PLANT_SIZE = 35;
+const NODE_SIZE = 35;
 const ANIMATION_DELAY = 100;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-rows: repeat(${GRAPH_ROWS}, ${PLANT_SIZE}px);
-  grid-template-columns: repeat(${GRAPH_COLS}, ${PLANT_SIZE}px);
+  grid-template-rows: repeat(${GRAPH_ROWS}, ${NODE_SIZE}px);
+  grid-template-columns: repeat(${GRAPH_COLS}, ${NODE_SIZE}px);
   margin-left: auto;
   margin-right: auto;
-  width: ${GRAPH_COLS * PLANT_SIZE}px;
+  width: ${GRAPH_COLS * NODE_SIZE}px;
 `;
 
 const PathfindingVisualizer = forwardRef(({ alterMode, algo }, ref) => {
@@ -40,15 +40,37 @@ const PathfindingVisualizer = forwardRef(({ alterMode, algo }, ref) => {
   const gridRef = useRef();
 
   useEffect(() => {
+    window.addEventListener('resize', generateResponsiveGrid);
+    generateResponsiveGrid();
+    return function cleanup() {
+      window.removeEventListener('resize', generateResponsiveGrid);
+    };
+  }, []);
+
+  const generateResponsiveGrid = () => {
     const containerWidth = container.current.offsetWidth;
     const containerHeight = container.current.offsetHeight;
-    const newColCount = Math.floor(containerWidth / PLANT_SIZE);
-    const newRowCount = Math.floor(containerHeight / PLANT_SIZE);
-    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${PLANT_SIZE}px)`;
-    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${PLANT_SIZE}px)`;
-    gridRef.current.style.width = `${newColCount * PLANT_SIZE}px`;
-    setgraphData(createGraph(newRowCount, newColCount, startNode, endNode));
-  }, []);
+    const newColCount = Math.floor(containerWidth / NODE_SIZE);
+    const newRowCount = Math.floor(containerHeight / NODE_SIZE);
+
+    const newStartNode =
+      String(Math.floor(newRowCount / 2)) +
+      '-' +
+      Math.floor(newColCount / 3 / 2);
+    const newEndNode =
+      String(Math.floor(newRowCount / 2)) +
+      '-' +
+      (newColCount - Math.floor(newColCount / 3 / 2));
+
+    gridRef.current.style.gridTemplateColumns = `repeat(${newColCount}, ${NODE_SIZE}px)`;
+    gridRef.current.style.gridTemplateRows = `repeat(${newRowCount}, ${NODE_SIZE}px)`;
+    gridRef.current.style.width = `${newColCount * NODE_SIZE}px`;
+    setgraphData(
+      createGraph(newRowCount, newColCount, newStartNode, newEndNode)
+    );
+    setStartNode(newStartNode);
+    setEndNode(newEndNode);
+  };
 
   const runAlgorithm = () => {
     switch (algo) {
@@ -207,7 +229,7 @@ const PathfindingVisualizer = forwardRef(({ alterMode, algo }, ref) => {
       nodes.push(
         <Star
           key={`${node.row}-${node.col}`}
-          plantSize={PLANT_SIZE}
+          plantSize={NODE_SIZE}
           animationDelay={ANIMATION_DELAY}
           nodeData={node}
           onNodeClick={(row, col) => {

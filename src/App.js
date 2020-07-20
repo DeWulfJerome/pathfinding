@@ -26,9 +26,8 @@ function App() {
   };
   return (
     <AppContainer>
-      <Menu>
+      <Menu visualize={visualize}>
         <ControlsContainer
-          visualize={visualize}
           onChangeAlterMode={onChangeAlterMode}
           onChangeAlgo={onChangeAlgo}
         ></ControlsContainer>

@@ -2,8 +2,41 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Hamburger from './Hamburger';
+import StyleConstants from '../../StyleConstants';
 
-const MENU_BUTTON_HEIGHT = 50;
+const MENU_BUTTON_HEIGHT = 80;
+
+const RowGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: ${MENU_BUTTON_HEIGHT + 'px'};
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  background-color: transparent;
+  border-radius: 40px;
+  border: 2px solid ${StyleConstants.colors.blue.light};
+  box-shadow: 0 0 5px 2px ${StyleConstants.colors.blue.shade};
+  padding: 0.7rem 2rem;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.04);
+  }
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 15px 2px ${StyleConstants.colors.blue.shade};
+  }
+`;
 
 const SlidingMenu = styled.div`
   position: absolute;
@@ -16,10 +49,12 @@ const SlidingMenu = styled.div`
 `;
 
 const MenuBtnContainer = styled.div`
-  height: ${MENU_BUTTON_HEIGHT + 'px'};
-  padding-left: ${MENU_BUTTON_HEIGHT + 'px'};
+  padding-left: 1.2rem;
   display: flex;
   align-items: center;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const SettingsText = styled.p`
@@ -27,7 +62,7 @@ const SettingsText = styled.p`
   margin-left: 1rem;
 `;
 
-export default function Menu({ children }) {
+export default function Menu({ visualize, children }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -36,14 +71,21 @@ export default function Menu({ children }) {
 
   return (
     <div>
-      <MenuBtnContainer>
-        <Hamburger
-          onOpenClick={toggleMenu}
-          open={menuOpen}
-          height={MENU_BUTTON_HEIGHT}
-        ></Hamburger>
-        <SettingsText>Settings</SettingsText>
-      </MenuBtnContainer>
+      <RowGrid>
+        <MenuBtnContainer onClick={toggleMenu}>
+          <Hamburger open={menuOpen} height={MENU_BUTTON_HEIGHT}></Hamburger>
+          <SettingsText>Settings</SettingsText>
+        </MenuBtnContainer>
+        <ButtonContainer>
+          <Button
+            onClick={() => {
+              visualize('dijkstra');
+            }}
+          >
+            Visualize!
+          </Button>
+        </ButtonContainer>
+      </RowGrid>
       <SlidingMenu menuOpen={menuOpen}>{children}</SlidingMenu>
     </div>
   );
