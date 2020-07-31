@@ -59,34 +59,33 @@ const Dot = styled.div`
   ${complexPulse}
 `;
 
-export default function Star({
-  nodeData,
-  onNodeClick,
-  animationDelay,
-  plantSize
-}) {
-  return (
-    <StarHolder
-      onMouseDown={(e) => {
-        e.preventDefault();
-        onNodeClick(nodeData.row, nodeData.col);
-      }}
-      onMouseEnter={(e) => {
-        if (e.buttons === 1) {
+const Star = React.memo(
+  ({ nodeData, onNodeClick, animationDelay, plantSize }) => {
+    return (
+      <StarHolder
+        onMouseDown={(e) => {
+          e.preventDefault();
           onNodeClick(nodeData.row, nodeData.col);
-        }
-      }}
-      style={{ width: plantSize, height: plantSize }}
-      isVisited={nodeData.isVisited}
-    >
-      <Dot
-        isPath={nodeData.isPath}
-        isStart={nodeData.isStart}
-        isFinish={nodeData.isFinish}
-        animationDelay={animationDelay}
+        }}
+        onMouseEnter={(e) => {
+          if (e.buttons === 1) {
+            onNodeClick(nodeData.row, nodeData.col);
+          }
+        }}
+        style={{ width: plantSize, height: plantSize }}
         isVisited={nodeData.isVisited}
-        isWall={nodeData.isWall}
-      ></Dot>
-    </StarHolder>
-  );
-}
+      >
+        <Dot
+          isPath={nodeData.isPath}
+          isStart={nodeData.isStart}
+          isFinish={nodeData.isFinish}
+          animationDelay={animationDelay}
+          isVisited={nodeData.isVisited}
+          isWall={nodeData.isWall}
+        ></Dot>
+      </StarHolder>
+    );
+  }
+);
+
+export default Star;
